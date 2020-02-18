@@ -1,5 +1,6 @@
-const express = require('express');
 const controllers = require('./controllers');
+const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 
 const app = express();
@@ -17,6 +18,18 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../..', 'client/build', 'index.html'));
   });
 }
+
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/control-tower');
+mongoose.connect('mongodb://localhost/control-tower');
+
+mongoose.connection.on('connected', function () {
+  console.log('mongodb is on!');
+});
+
+mongoose.connection.on('error', function (err) {
+  console.log('mongodb encounter an error!');
+  console.log(err);
+});
 
 app.listen(PORT, () => {
   console.log(`Our app is running on port ${ PORT }`);
