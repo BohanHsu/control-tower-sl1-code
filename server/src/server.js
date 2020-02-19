@@ -21,9 +21,13 @@ if (process.env.NODE_ENV === 'production') {
 
 // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/control-tower');
 
+MONGOLAB_URI
+
 const MONGODB_URL =
   process.env.MONGOLAB_URI ||
   process.env.MONGOHQ_URL || 'mongodb://localhost/control-tower';
+
+console.log(MONGODB_URL);
 
 mongoose.connect(MONGODB_URL);
 
