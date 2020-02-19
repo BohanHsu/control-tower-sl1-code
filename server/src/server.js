@@ -23,7 +23,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const MONGODB_URL =
   process.env.MONGOLAB_URI ||
-  process.env.MONGOHQ_URL || 'mongodb://localhost/control-tower';
+  process.env.MONGOHQ_URL ||
+  process.env.MONGODB_URI ||
+  'mongodb://localhost/control-tower';
 
 console.log(MONGODB_URL);
 
