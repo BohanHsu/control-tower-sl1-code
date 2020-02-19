@@ -20,7 +20,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/control-tower');
-mongoose.connect('mongodb://localhost/control-tower');
+
+const MONGODB_URL =
+  process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL || 'mongodb://localhost/control-tower';
+
+mongoose.connect(MONGODB_URL);
 
 mongoose.connection.on('connected', function () {
   console.log('mongodb is on!');
