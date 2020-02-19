@@ -6,6 +6,9 @@
   "author": "BohanHsu <ilovebarce@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.1",
+    "path": "^0.12.7"
   },
   "scripts": {
     "start": "node server/src/server.js",
