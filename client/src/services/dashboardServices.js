@@ -6,6 +6,22 @@ class DashboardServices {
 
     return body;
   };
+
+  async updateGlobalSwitch(isOn) {
+    const data = {
+      isOn
+    };
+
+    const response = await fetch('/api/ui/operations/globalSwitch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  }
 }
 
 export default DashboardServices;
