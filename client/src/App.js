@@ -1,38 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import DashboardServices from './services/dashboardServices';
+
 function App() {
-  React.useEffect(() => {
+  const services = new DashboardServices();
 
-    async function callApi() {
-      const response = await fetch('/api/ui/dashboard');
-      const body = await response.json();
-      if (response.status !== 200) throw Error(body.message);
+  const [killSwitch, setKillSwitch] = useState(false);
+  const [shouldPlay, setShouldPlay] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-      console.log(body);
-      return body;
-    };
-
-    callApi();
+  useEffect(async () => {
+    const resp = await services.loadDashboardInfo();
+    if (resp) {
+      setShouldPlay(setShouldPlay(resp.shouldPlay));
+    }
+    return null;
   }, []);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>Should Play: {shouldPlay ? "Yes" : "No"}</p>
     </div>
   );
 }
