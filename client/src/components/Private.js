@@ -5,8 +5,9 @@ import DashboardServices from '../services/dashboardServices';
 
 function Private(props) {
   const loggedInChangedCallback = props.onLoggedInChanged;
+  const api = props.api;
 
-  const dashboardServices = new DashboardServices();
+  const dashboardServices = new DashboardServices(api);
   const authServices = new AuthServices();
 
   const [globalSwitch, setGlobalSwitch,] = useState(false);

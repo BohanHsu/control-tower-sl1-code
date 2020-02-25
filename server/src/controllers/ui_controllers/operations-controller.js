@@ -1,6 +1,8 @@
 const express = require('express');
 const globalSwitchService = require('../../services/global-switch-service');
 
+const responder = require('./responder');
+
 const app = express();
 
 module.exports = function() {
@@ -10,8 +12,10 @@ module.exports = function() {
       isOn = req.body.isOn;
     }
     globalSwitchService.updateGlobalSwitch(isOn).then((result) => {
-      res.json({data: {updated: result}});
-    })
+      responder.json(req, res, {
+        updated: result,
+      }, null);
+    });
   });
 
   return app;
