@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 
 import AuthServices from '../services/authServices';
 import DashboardServices from '../services/dashboardServices';
@@ -10,14 +10,20 @@ function Private(props) {
   const dashboardServices = new DashboardServices(api);
   const authServices = new AuthServices();
 
-  const [globalSwitch, setGlobalSwitch,] = useState(false);
-  const [shouldPlay, setShouldPlay] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [globalSwitch, setGlobalSwitch,] = useState(null);
+  const [shouldPlay, setShouldPlay] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(null);
+
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const [localGlobalSwitch, setLocalGlobalSwitch,] = useState(false);
   const [localShouldPlay, setLocalShouldPlay,] = useState(false);
 
+  let timerId;
+
   const refreshDisplayValue = () => {
+    clearInterval(timerId);
+    setIsSyncing(true);
     (async () => {
       const resp = await dashboardServices.loadDashboardInfo();
       if (resp) {
@@ -26,29 +32,35 @@ function Private(props) {
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
       }
+      setIsSyncing(false);
+
+      timerId = setInterval(() => {
+        refreshDisplayValue();
+      }, 10000);
+
       return null;
     })();
   };
 
   useEffect(refreshDisplayValue, []);
 
-  const _onGlobalSwitchClick = (val) => {
+  const _onGlobalSwitchClick = useCallback((val) => {
     const globalSwitchIsOn = val.target.checked
     setLocalGlobalSwitch(globalSwitchIsOn);
     (async () => {
       await dashboardServices.updateGlobalSwitch(globalSwitchIsOn);
       refreshDisplayValue();
     })();
-  };
+  }, [timerId]);
 
-  const _onShouldPlayClick = (val) => {
+  const _onShouldPlayClick = useCallback((val) => {
     const newShouldPlay = val.target.checked
     setLocalShouldPlay(newShouldPlay);
     (async () => {
       await dashboardServices.updateShouldPlay(newShouldPlay);
       refreshDisplayValue();
     })();
-  };
+  }, [timerId]);;
 
   const _handleLogout = (val) => {
     authServices.logout();
@@ -57,13 +69,18 @@ function Private(props) {
     }
   };
 
+  const globalSwitchDescription = globalSwitch === null ? "Syncing..." : globalSwitch ? "On" : "Off";
+  const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
+
   return (
     <div className>
       <div>
         <button onClick={_handleLogout}>Logout</button>
       </div>
-      <p>Global switch is ON: {globalSwitch ? "Yes" : "No"}</p>
-      <p>Should Play: {shouldPlay ? "Yes" : "No"}</p>
+      <p>Updating Information: {isSyncing ? "Yes" : "No"}</p>
+      <hr/>
+      <p>Global switch is ON: {globalSwitchDescription}</p>
+      <p>Should Play: {shouldPlayDescription}</p>
       <hr/>
       <div>
         <label>
