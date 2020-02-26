@@ -15,24 +15,38 @@ function Private(props) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [localGlobalSwitch, setLocalGlobalSwitch,] = useState(false);
+  const [localShouldPlay, setLocalShouldPlay,] = useState(false);
 
-  useEffect(() => {
+  const refreshDisplayValue = () => {
     (async () => {
       const resp = await dashboardServices.loadDashboardInfo();
       if (resp) {
         setGlobalSwitch(resp.data.globalSwitch.isOn);
         setLocalGlobalSwitch(resp.data.globalSwitch.isOn)
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
+        setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
       }
       return null;
     })();
-  }, []);
+  };
+
+  useEffect(refreshDisplayValue, []);
 
   const _onGlobalSwitchClick = (val) => {
     const globalSwitchIsOn = val.target.checked
     setLocalGlobalSwitch(globalSwitchIsOn);
     (async () => {
       await dashboardServices.updateGlobalSwitch(globalSwitchIsOn);
+      refreshDisplayValue();
+    })();
+  };
+
+  const _onShouldPlayClick = (val) => {
+    const newShouldPlay = val.target.checked
+    setLocalShouldPlay(newShouldPlay);
+    (async () => {
+      await dashboardServices.updateShouldPlay(newShouldPlay);
+      refreshDisplayValue();
     })();
   };
 
@@ -50,6 +64,8 @@ function Private(props) {
       </div>
       <p>Global switch is ON: {globalSwitch ? "Yes" : "No"}</p>
       <p>Should Play: {shouldPlay ? "Yes" : "No"}</p>
+      <hr/>
+      <div>
         <label>
           <input 
             type='checkbox' 
@@ -58,9 +74,19 @@ function Private(props) {
             onClick={()=>{}}/>
           Change Global Switch
         </label>
+      </div>
+      <div>
+        <label>
+          <input 
+            type='checkbox' 
+            checked={localShouldPlay}
+            onChange={_onShouldPlayClick}
+            onClick={()=>{}}/>
+          Change Should Play
+        </label>
+      </div>
     </div>
   );
 }
 
 export default Private;
-

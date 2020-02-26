@@ -15,6 +15,21 @@ module.exports = {
         return shouldPlayObj;
       });
     });
-  }
+  },
+
+  updateShouldPlay: function(shouldPlayVal) {
+    return ShouldPlay.findOne({}).then((shouldPlayObj, err) => {
+      if (err) {
+        return null;
+      }
+
+      return shouldPlayObj;
+    }).then((shouldPlayObj) => {
+      shouldPlayObj.shouldPlay = shouldPlayVal;
+      return shouldPlayObj.save();
+    }).then((shouldPlayObj) => {
+      return shouldPlayObj.shouldPlay === shouldPlayVal;
+    });
+  },
 };
 

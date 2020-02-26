@@ -28,7 +28,7 @@ module.exports = {
       globalSwitchObj.isOn = isOn;
       return globalSwitchObj.save();
     }).then((globalSwitchObj) => {
-      return globalSwitchObj.isOn == isOn;
+      return globalSwitchObj.isOn === isOn;
     });
   },
 };
