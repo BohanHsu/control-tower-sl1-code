@@ -11,9 +11,10 @@ module.exports = function() {
       motto = req.body.motto;
     }
 
-    const token = authService.getLoginToken(motto);
-
-    res.json({data: {token}});
+    authService.getLoginToken(motto)
+    .then((token) => {
+      res.json({data: {token}});
+    });
   });
 
   return app;

@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
+const userService = require('./user-service');
 
 module.exports = {
   getLoginToken: (motto) => {
-    if (motto === 'test') {
-      const token = jwt.sign({motto:"test"}, 'supersecret',{expiresIn: 600});
-      return token;
-    }
+    return userService.verifyUserByIdentification(motto)
+    .then((verified) => {
+      if (verified) {
+        const token = jwt.sign({motto}, 'supersecret',{expiresIn: 600});
+        return token;
+      }
 
-    return null;
+      return null;
+    });
   },
 };
