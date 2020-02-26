@@ -6,13 +6,18 @@ module.exports = function(req, res, next) {
   jwt.verify(token, 'supersecret', function(err, decoded){
     if(!err){
       const motto = decoded.motto;
-      const newToken = authService.getLoginToken(motto);
 
-      if (res.locals) {
-        res.locals.newToken = newToken;
-      }
-      
-      next();
+      authService.getLoginToken(motto).then((newToken) => {
+        if (newToken) {
+          if (res.locals) {
+            res.locals.newToken = newToken;
+          }
+
+          next();
+        } else {
+          res.sendStatus(403, {});
+        }
+      });
     } else {
       res.sendStatus(403, {});
     }
