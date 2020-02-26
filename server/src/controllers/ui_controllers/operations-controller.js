@@ -1,5 +1,6 @@
 const express = require('express');
 const globalSwitchService = require('../../services/global-switch-service');
+const shouldPlayService = require('../../services/should-play-service');
 
 const responder = require('./responder');
 
@@ -12,6 +13,19 @@ module.exports = function() {
       isOn = req.body.isOn;
     }
     globalSwitchService.updateGlobalSwitch(isOn).then((result) => {
+      responder.json(req, res, {
+        updated: result,
+      }, null);
+    });
+  });
+
+  app.post('/shouldPlay', function(req, res) {
+    let shouldPlayVal = false;
+    if (req && req.body) {
+      shouldPlayVal = req.body.shouldPlay;
+    }
+
+    shouldPlayService.updateShouldPlay(shouldPlayVal).then((result) => {
       responder.json(req, res, {
         updated: result,
       }, null);

@@ -10,6 +10,10 @@ class DashboardServices {
   async updateGlobalSwitch(isOn) {
     return this._api.post('/api/ui/operations/globalSwitch', {isOn});
   }
+
+  async updateShouldPlay(shouldPlay) {
+    return this._api.post('/api/ui/operations/shouldPlay', {shouldPlay});
+  }
 }
 
 export default DashboardServices;
