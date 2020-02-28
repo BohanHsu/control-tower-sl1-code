@@ -31,10 +31,12 @@ function Private(props) {
         setLocalGlobalSwitch(resp.data.globalSwitch.isOn)
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
+        setIsPlaying(resp.data.isPlaying.isPlaying);
       }
       setIsSyncing(false);
 
       timerId = setInterval(() => {
+        console.log('refreshing page');
         refreshDisplayValue();
       }, 10000);
 
@@ -71,6 +73,7 @@ function Private(props) {
 
   const globalSwitchDescription = globalSwitch === null ? "Syncing..." : globalSwitch ? "On" : "Off";
   const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
+  const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
 
   return (
     <div className>
@@ -81,6 +84,8 @@ function Private(props) {
       <hr/>
       <p>Global switch is ON: {globalSwitchDescription}</p>
       <p>Should Play: {shouldPlayDescription}</p>
+      <hr/>
+      <p>Player is playing: {isPlayingDescription}</p>
       <hr/>
       <div>
         <label>
