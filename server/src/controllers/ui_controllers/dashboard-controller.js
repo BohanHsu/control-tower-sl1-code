@@ -19,7 +19,10 @@ module.exports = function (req, res) {
     responder.json(req, res, {
       shouldPlay: {shouldPlay: gShouldPlayObj.shouldPlay},
       globalSwitch: {isOn: gGlobalSwitchObj.isOn},
-      isPlaying: {isPlaying: isPlayingObj.isPlaying},
+      isPlaying: {
+        isPlaying: isPlayingObj.isPlaying,
+        lastUpdate: new Date(isPlayingObj.updated_at).getTime(),
+      },
     }, null);
   });
 };

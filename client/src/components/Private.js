@@ -13,6 +13,7 @@ function Private(props) {
   const [globalSwitch, setGlobalSwitch,] = useState(null);
   const [shouldPlay, setShouldPlay] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
+  const [isPlayingLastUpdateTime, setIsPlayingLastUpdateTime] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -32,6 +33,7 @@ function Private(props) {
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
         setIsPlaying(resp.data.isPlaying.isPlaying);
+        setIsPlayingLastUpdateTime(new Date(resp.data.isPlaying.lastUpdate).toString());
       }
       setIsSyncing(false);
 
@@ -71,9 +73,14 @@ function Private(props) {
     }
   };
 
+  const _handleManualRefresh = (val) => {
+    refreshDisplayValue();
+  }
+
   const globalSwitchDescription = globalSwitch === null ? "Syncing..." : globalSwitch ? "On" : "Off";
   const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
   const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
+  const isPlayingLastUpdateTimeDescription = isPlayingLastUpdateTime === null ? "Syncing..." : isPlayingLastUpdateTime;
 
   return (
     <div className>
@@ -86,6 +93,7 @@ function Private(props) {
       <p>Should Play: {shouldPlayDescription}</p>
       <hr/>
       <p>Player is playing: {isPlayingDescription}</p>
+      <p>Is playing value last updated at: {isPlayingLastUpdateTimeDescription}</p>
       <hr/>
       <div>
         <label>
@@ -106,6 +114,10 @@ function Private(props) {
             onClick={()=>{}}/>
           Change Should Play
         </label>
+      </div>
+      <hr/>
+      <div>
+        <button onClick={_handleManualRefresh}>Refresh</button>
       </div>
     </div>
   );
