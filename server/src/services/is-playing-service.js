@@ -16,7 +16,7 @@ module.exports = {
   updateIsPlaying: function(isPlaying) {
     return IsPlaying.findOne({}).then((isPlayingObj, err) => {
       if (isPlayingObj) {
-        isPlayingObj.isPlayingObj = isPlaying;
+        isPlayingObj.isPlaying = isPlaying;
         return isPlayingObj.save();
       } else {
         return IsPlaying.create({isPlaying});
