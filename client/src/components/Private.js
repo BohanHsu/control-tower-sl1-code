@@ -14,6 +14,7 @@ function Private(props) {
   const [shouldPlay, setShouldPlay] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
   const [isPlayingLastUpdateTime, setIsPlayingLastUpdateTime] = useState(null);
+  const [lastWorkerReportTimestamp, setLastWorkerReportTimestamp] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -34,6 +35,10 @@ function Private(props) {
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
         setIsPlaying(resp.data.isPlaying.isPlaying);
         setIsPlayingLastUpdateTime(new Date(resp.data.isPlaying.lastUpdate).toString());
+        const tmpLastWorkerReportTimestamp = resp.data.isPlaying.lastWorkerReportTime;
+        // if (tmpLastWorkerReportTimestamp > 0)
+        const tmpLastWorkerReportTimestampString = tmpLastWorkerReportTimestamp > 0 ? new Date(tmpLastWorkerReportTimestamp).toString() : "Not available";
+        setLastWorkerReportTimestamp(tmpLastWorkerReportTimestampString);
       }
       setIsSyncing(false);
 
@@ -81,6 +86,7 @@ function Private(props) {
   const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
   const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
   const isPlayingLastUpdateTimeDescription = isPlayingLastUpdateTime === null ? "Syncing..." : isPlayingLastUpdateTime;
+  const lastWorkerReportTimestampDescription = lastWorkerReportTimestamp === null ? "Syncing..." : lastWorkerReportTimestamp;
 
   return (
     <div className>
@@ -93,7 +99,8 @@ function Private(props) {
       <p>Should Play: {shouldPlayDescription}</p>
       <hr/>
       <p>Player is playing: {isPlayingDescription}</p>
-      <p>Is playing value last updated at: {isPlayingLastUpdateTimeDescription}</p>
+      <p>Is playing value last change at: {isPlayingLastUpdateTimeDescription}</p>
+      <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
       <hr/>
       <div>
         <label>

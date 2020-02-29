@@ -22,6 +22,7 @@ module.exports = function (req, res) {
       isPlaying: {
         isPlaying: isPlayingObj.isPlaying,
         lastUpdate: new Date(isPlayingObj.updated_at).getTime(),
+        lastWorkerReportTime: new Date(isPlayingObj.lastWorkerReportTime).getTime(),
       },
     }, null);
   });
