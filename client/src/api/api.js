@@ -10,7 +10,10 @@ class Api {
       headers,
     });
 
-    const responseJson = await response.json();
+    let responseJson = null;
+    if (response.status === 200) {
+      responseJson = await response.json();
+    }
     if (!this._handleUnauthorized(response, responseJson)) {
       return;
     }
@@ -49,7 +52,7 @@ class Api {
 
   _handleUnauthorized(response, responseJson) {
     let isAuthorized = false;
-    if (response.status === 403) {
+    if (response.status !== 200) {
       localStorage.setItem('tkn', null);
     } else {
       localStorage.setItem('tkn', responseJson.token);
