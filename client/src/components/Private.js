@@ -90,7 +90,6 @@ function Private(props) {
   const globalSwitchDescription = globalSwitch === null ? "Syncing..." : globalSwitch ? "On" : "Off";
   const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
   const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
-  const isPlayingLastUpdateTimeDescription = isPlayingLastUpdateTime === null ? "Syncing..." : isPlayingLastUpdateTime;
   const lastWorkerReportTimestampDescription = lastWorkerReportTimestamp === null ? "Syncing..." : lastWorkerReportTimestamp;
 
   return (
@@ -104,7 +103,6 @@ function Private(props) {
       <p>Should Play: {shouldPlayDescription}</p>
       <hr/>
       <p>Player is playing: {isPlayingDescription}</p>
-      <p>Is playing value last change at: {isPlayingLastUpdateTimeDescription}</p>
       <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
       <hr/>
       <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
