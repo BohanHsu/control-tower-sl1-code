@@ -50,7 +50,7 @@ function Private(props) {
       timerId = setInterval(() => {
         console.log('refreshing page');
         refreshDisplayValue();
-      }, 10000);
+      }, 5000);
 
       return null;
     })();

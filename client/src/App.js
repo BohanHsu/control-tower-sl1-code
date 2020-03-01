@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -19,16 +19,17 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(refreshLoggedIn());
 
   const _handleLoggedInChanged = () => {
-    console.log('_handleLoggedInChanged');
     setIsLoggedIn(refreshLoggedIn());
   };
 
   const api = new Api(_handleLoggedInChanged);
 
-  const publicComponent = () => {return (<Public onLoggedInChanged={_handleLoggedInChanged}/>)};
-  const privateComponent = () => {return (<Private onLoggedInChanged={_handleLoggedInChanged} api={api}/>)};
+  const _getIsLoggedIn = useCallback(() => {
+    return refreshLoggedIn()
+  }, []);
 
-  console.log('loggedin: ', isLoggedIn);
+  const publicComponent = () => {return (<Public onLoggedInChanged={_handleLoggedInChanged} isLoggedIn={_getIsLoggedIn}/>)};
+  const privateComponent = () => {return (<Private onLoggedInChanged={_handleLoggedInChanged} api={api}/>)};
 
   return (
     <div>
