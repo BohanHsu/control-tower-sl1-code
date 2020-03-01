@@ -5,25 +5,29 @@ function IsPlayingHistory(props) {
     <div>
       Is Playing History
       <table border="1">
-        <tr>
-          <th>
-            Start time
-          </th>
-            End time
-          <th>
-          </th>
-        </tr>
-        {props.isPlayingHistory.map((history) => {
-          return (
-            <tr>
-              <td width="50%">
-                {new Date(history.startTime).toLocaleString()}
-              </td>
-              <td width="50%">
-                {history.endTime !== null && new Date(history.endTime).toLocaleString()}
-              </td>
-            </tr>);
-        })}
+        <thead>
+          <tr>
+            <th>
+              <p>Start time</p>
+            </th>
+            <th>
+              <p>End time</p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.isPlayingHistory.map((history, idx) => {
+            return (
+              <tr key={`is-playing-history-${idx}`}>
+                <td width="50%">
+                  <p>{new Date(history.startTime).toLocaleString()}</p>
+                </td>
+                <td width="50%">
+                  <p>{history.endTime !== null && new Date(history.endTime).toLocaleString()}</p>
+                </td>
+              </tr>);
+          })}
+        </tbody>
       </table>
     </div>
   );

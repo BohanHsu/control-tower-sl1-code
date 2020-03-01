@@ -14,7 +14,6 @@ function Private(props) {
   const [globalSwitch, setGlobalSwitch,] = useState(null);
   const [shouldPlay, setShouldPlay] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
-  const [isPlayingLastUpdateTime, setIsPlayingLastUpdateTime] = useState(null);
   const [lastWorkerReportTimestamp, setLastWorkerReportTimestamp] = useState(null);
 
   const [isPlayingHistory, setIsPlayingHistory] = useState([]);
@@ -37,10 +36,9 @@ function Private(props) {
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
         setIsPlaying(resp.data.isPlaying.isPlaying);
-        setIsPlayingLastUpdateTime(new Date(resp.data.isPlaying.lastUpdate).toString());
 
         const tmpLastWorkerReportTimestamp = resp.data.isPlaying.lastWorkerReportTime;
-        const tmpLastWorkerReportTimestampString = tmpLastWorkerReportTimestamp > 0 ? new Date(tmpLastWorkerReportTimestamp).toString() : "Not available";
+        const tmpLastWorkerReportTimestampString = tmpLastWorkerReportTimestamp > 0 ? new Date(tmpLastWorkerReportTimestamp).toLocaleString() : "Not available";
         setLastWorkerReportTimestamp(tmpLastWorkerReportTimestampString);
 
         setIsPlayingHistory(resp.data.isPlayingHistories);
@@ -93,20 +91,19 @@ function Private(props) {
   const lastWorkerReportTimestampDescription = lastWorkerReportTimestamp === null ? "Syncing..." : lastWorkerReportTimestamp;
 
   return (
-    <div className>
+    <div>
       <div>
         <button onClick={_handleLogout}>Logout</button>
       </div>
       <p>Updating Information: {isSyncing ? "Yes" : "No"}</p>
+
+      <div>
+        <button onClick={_handleManualRefresh}>Refresh</button>
+      </div>
+
       <hr/>
+
       <p>Global switch is ON: {globalSwitchDescription}</p>
-      <p>Should Play: {shouldPlayDescription}</p>
-      <hr/>
-      <p>Player is playing: {isPlayingDescription}</p>
-      <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
-      <hr/>
-      <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
-      <hr/>
       <div>
         <label>
           <input 
@@ -117,6 +114,9 @@ function Private(props) {
           Change Global Switch
         </label>
       </div>
+
+      <hr/>
+      <p>Should Play: {shouldPlayDescription}</p>
       <div>
         <label>
           <input 
@@ -127,10 +127,14 @@ function Private(props) {
           Change Should Play
         </label>
       </div>
+
       <hr/>
-      <div>
-        <button onClick={_handleManualRefresh}>Refresh</button>
-      </div>
+      <p>Player is playing: {isPlayingDescription}</p>
+      <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
+      <hr/>
+      <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
+      <hr/>
+      <hr/>
     </div>
   );
 }
