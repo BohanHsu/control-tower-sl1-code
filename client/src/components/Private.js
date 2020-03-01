@@ -2,6 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 
 import AuthServices from '../services/authServices';
 import DashboardServices from '../services/dashboardServices';
+import IsPlayingHistory from './isPlaying/IsPlayingHistory';
 
 function Private(props) {
   const loggedInChangedCallback = props.onLoggedInChanged;
@@ -14,6 +15,8 @@ function Private(props) {
   const [shouldPlay, setShouldPlay] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
   const [isPlayingLastUpdateTime, setIsPlayingLastUpdateTime] = useState(null);
+
+  const [isPlayingHistory, setIsPlayingHistory] = useState([]);
 
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -34,6 +37,7 @@ function Private(props) {
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
         setIsPlaying(resp.data.isPlaying.isPlaying);
         setIsPlayingLastUpdateTime(new Date(resp.data.isPlaying.lastUpdate).toString());
+        setIsPlayingHistory(resp.data.isPlayingHistories);
       }
       setIsSyncing(false);
 
@@ -94,6 +98,8 @@ function Private(props) {
       <hr/>
       <p>Player is playing: {isPlayingDescription}</p>
       <p>Is playing value last updated at: {isPlayingLastUpdateTimeDescription}</p>
+      <hr/>
+      <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
       <hr/>
       <div>
         <label>
