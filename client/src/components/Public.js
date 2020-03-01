@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 
 import AuthServices from '../services/authServices';
 
@@ -13,7 +13,7 @@ function Public(props) {
     setMotto(evt.target.value);
   };
 
-  const handleBtnClick = () => {
+  const _handleBtnClick = () => {
     (async () => {
       const response = await services.login(motto);
       if (response && loggedInChangedCallback) {
@@ -22,11 +22,36 @@ function Public(props) {
     })();
   };
 
+  const _handleKeyDown = (event) => {
+    if (props.isLoggedIn()) {
+      return;
+    }
+
+    switch( event.keyCode ) {
+      case 13: // ENTER
+        _handleBtnClick();
+      break;
+      default: 
+        break;
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", _handleKeyDown);
+  }, [motto]);
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener("keydown", _handleKeyDown, true);
+    }
+  }, []);
+
   return (
     <div>
+      <h1>Trivia</h1>
       <div>Flight Number from JFK to LGA?</div>
       <div><label><input value={motto} onChange={handleMottoChange} type="text"/></label></div>
-      <div><button onClick={handleBtnClick}>Answer!</button></div>
+      <div><button onClick={_handleBtnClick}>Answer!</button></div>
     </div>
   );
 }
