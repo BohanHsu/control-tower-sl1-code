@@ -10,6 +10,7 @@ module.exports = {
 
       return IsPlaying.create({
         isPlaying: false,
+        lastWorkerReportTime: new Date(0),
       });
     });
   },
@@ -20,7 +21,10 @@ module.exports = {
       if (isPlayingObj) {
         return isPlayingObj;
       } else {
-        return IsPlaying.create({isPlaying});
+        return IsPlaying.create({
+          isPlaying,
+          lastWorkerReportTime: new Date(),
+        });
       }
     }).then((isPlayingObj) => {
       gIsPlayingObj = isPlayingObj;
@@ -31,6 +35,7 @@ module.exports = {
       return;
     }).then(() => {
       gIsPlayingObj.isPlaying = isPlaying;
+      gIsPlayingObj.lastWorkerReportTime = new Date();
       return gIsPlayingObj.save();
     }).then((isPlayingObj) => {
       return isPlayingObj.isPlaying === isPlaying;
