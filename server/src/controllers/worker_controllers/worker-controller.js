@@ -9,9 +9,11 @@ const app = express();
 
 module.exports = function() {
   app.post('/ping', function (req, res) {
+    let gGlobalSwitchResp = false;
     let gShouldPlayResp = false;
 
     const isPlaying = !!(req.body.isPlaying);
+    // Handle work reports
     return isPlayingService.updateIsPlaying(isPlaying).then(() => {
       let duangRequestId = null;
       let duangPlayed = false;
@@ -27,8 +29,10 @@ module.exports = function() {
         return duangRequestService.updateDuangRequestState(duangRequestId, duangPlayed, duangRejectReason);
       }
       return null;
+      // End handle work reports
     }).then(() => {
       return globalSwitchService.queryGlobalSwitch().then((globalSwitchObj) => {
+        gGlobalSwitchResp = globalSwitchObj && globalSwitchObj.isOn;
         return globalSwitchObj && globalSwitchObj.isOn;
       }).then((shouldPlay) => {
         if (!shouldPlay) {
@@ -45,7 +49,11 @@ module.exports = function() {
 
       return duangRequestService.checkNextDuangRequest()
     }).then((duang) => {
-      let response = {shouldPlay: gShouldPlayResp};
+      let response = {
+        globalSwitch: gGlobalSwitchResp,
+        shouldPlay: gShouldPlayResp
+      };
+
       if (duang) {
         response.duang = duang;
       }
