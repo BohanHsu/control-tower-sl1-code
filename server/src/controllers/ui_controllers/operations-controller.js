@@ -1,6 +1,7 @@
 const express = require('express');
 const globalSwitchService = require('../../services/global-switch-service');
 const shouldPlayService = require('../../services/should-play-service');
+const duangRequestService =require('../../services/duang-request-service');
 
 const responder = require('./responder');
 
@@ -28,6 +29,37 @@ module.exports = function() {
     shouldPlayService.updateShouldPlay(shouldPlayVal).then((result) => {
       responder.json(req, res, {
         updated: result,
+      }, null);
+    });
+  });
+
+  app.post('/requestDuang', function(req, res) {
+    duangRequestService.requestDuang().then((duangRequestObj) => {
+      responder.json(req, res, {
+        created: !!duangRequestObj,
+      }, null);
+    });
+  });
+
+  app.post('/cancelDuang', function(req, res) {
+    let requestId = null;
+    if (req && req.body) {
+      requestId = req.body.requestId;
+    }
+
+    duangRequestService.cancelDuang(requestId).then((cancelled) => {
+      responder.json(req, res, {
+        cancelled,
+      }, null);
+    });
+  });
+
+
+  // probably should be at somewhere else
+  app.get('/duangRequestHistory', function (req, res) {
+    duangRequestService.duangRequestHistory().then((history) => {
+      responder.json(req, res, {
+        history,
       }, null);
     });
   });
