@@ -30,12 +30,12 @@ module.exports = {
         })
 
         cleanQueueFunc = function() {
-          if (removeQueue.length === 0) {
+          if (toRemoveQueue.length === 0) {
             return true;
           }
 
-          const firstObj = removeQueue.pop();
-          return DuangRequest.findByIdAndDelete(firstObj._id).then(() => {
+          const firstObj = toRemoveQueue.pop();
+          return DuangRequest.findByIdAndDelete(firstObj._id).then((a) => {
             return cleanQueueFunc();
           })
         };

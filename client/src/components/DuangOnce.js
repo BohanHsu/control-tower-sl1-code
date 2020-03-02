@@ -65,6 +65,9 @@ function DuangOnce(props) {
         <thead>
           <tr>
             <th>
+              <p>Index</p>
+            </th>
+            <th>
               <p>Request ID</p>
             </th>
             <th>
@@ -91,6 +94,9 @@ function DuangOnce(props) {
           {duangRequestHistory.map((history, idx) => {
             return (
               <tr key={`duang-request-history-${idx}`}>
+                <td>
+                  <p>{idx + 1}</p>
+                </td>
                 <td>
                   <p>{history.requestId}</p>
                 </td>
