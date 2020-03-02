@@ -98,7 +98,7 @@ function Private(props) {
   // Master Page UI
   const tabsToDisplay = [
     (() => <ShouldPlay remoteShouldPlay={shouldPlay} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue}/>)(),
-    (() => <DuangOnce/>)(),
+    (() => <DuangOnce api={api}/>)(),
   ];
   // End Master Page UI
 
