@@ -19,6 +19,8 @@ function Private(props) {
   const [shouldPlay, setShouldPlay] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
   const [lastWorkerReportTimestamp, setLastWorkerReportTimestamp] = useState(null);
+  const [ipAddress, setIpAddress] = useState(null);
+  const [ipLastUpdateAt, setIpLastUpdateAt] = useState(null);
   // End From dashboard-api
 
   // Master Page UI
@@ -50,6 +52,14 @@ function Private(props) {
         setLastWorkerReportTimestamp(tmpLastWorkerReportTimestampString);
 
         setIsPlayingHistory(resp.data.isPlayingHistories);
+
+        if (resp.data.ip.ipAddress) {
+          setIpAddress(resp.data.ip.ipAddress);
+        }
+
+        if (resp.data.ip.lastReportAt) {
+          setIpLastUpdateAt(resp.data.ip.lastReportAt);
+        }
       }
       setIsSyncing(false);
       setLastSyningFinishTime(new Date().getTime());
@@ -94,6 +104,8 @@ function Private(props) {
   const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
   const lastWorkerReportTimestampDescription = lastWorkerReportTimestamp === null ? "Syncing..." : lastWorkerReportTimestamp;
   const lastSyningFinishTimeDescription = lastSyningFinishTime === null ? "Not Available" : new Date(lastSyningFinishTime).toLocaleString();
+  const ipAddressDescription = ipAddress ? ipAddress : "Not Available";
+  const ipLastUpdateAtDescription = ipLastUpdateAt ? new Date(ipLastUpdateAt).toLocaleString() : "Not Available";
 
   // Master Page UI
   const tabsToDisplay = [
@@ -114,6 +126,9 @@ function Private(props) {
         <button onClick={_handleManualRefresh}>Refresh</button>
       </div>
 
+      <hr/>
+      <p>IP address: {ipAddressDescription}</p>
+      <p>IP address last update at: {ipLastUpdateAtDescription}</p>
       <hr/>
 
       <p>Global switch is ON: {globalSwitchDescription}</p>

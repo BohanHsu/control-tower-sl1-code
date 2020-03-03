@@ -4,6 +4,7 @@ const isPlayingService = require('../../services/is-playing-service');
 const globalSwitchService = require('../../services/global-switch-service');
 const shouldPlayService = require('../../services/should-play-service');
 const duangRequestService = require('../../services/duang-request-service');
+const ipService = require('../../services/ip-service');
 
 const app = express();
 
@@ -27,6 +28,11 @@ module.exports = function() {
 
       if (duangRequestId) {
         return duangRequestService.updateDuangRequestState(duangRequestId, duangPlayed, duangRejectReason);
+      }
+      return null;
+    }).then(() => {
+      if (req && req.body && req.body.ip) {
+        return ipService.updateIp(req.body.ip);
       }
       return null;
       // End handle work reports

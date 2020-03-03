@@ -2,6 +2,7 @@ const shouldPlayService = require('../../services/should-play-service');
 const globalSwitchService = require('../../services/global-switch-service');
 const isPlayingSerivce = require('../../services/is-playing-service');
 const isPlayingHistorySerivce = require('../../services/is-playing-history-service');
+const ipSerivce = require('../../services/ip-service');
 
 const responder = require('./responder');
 
@@ -9,6 +10,7 @@ module.exports = function (req, res) {
   let gShouldPlayObj;
   let gGlobalSwitchObj;
   let gIsPlayingObj
+  let gIpObj = {};
   shouldPlayService.queryShouldPlay().then((shouldPlayObj) => {
     gShouldPlayObj = shouldPlayObj;
     return globalSwitchService.queryGlobalSwitch()
@@ -17,6 +19,11 @@ module.exports = function (req, res) {
     return isPlayingSerivce.queryIsPlaying()
   }).then((isPlayingObj) => {
     gIsPlayingObj = isPlayingObj;
+    return ipSerivce.queryIp();
+  }).then((ipObj) => {
+    if (ipObj) {
+      gIpObj = ipObj;
+    }
     return isPlayingHistorySerivce.queryIsPlayingHistory();
   }).then((isPlayingHistories) => {
     responder.json(req, res, {
@@ -28,6 +35,10 @@ module.exports = function (req, res) {
         lastWorkerReportTime: new Date(gIsPlayingObj.lastWorkerReportTime).getTime(),
       },
       isPlayingHistories,
+      ip: {
+        ipAddress: gIpObj.ipAddress,
+        lastReportAt: gIpObj.lastReportAt,
+      },
     }, null);
   });
 };
