@@ -27,7 +27,6 @@ function ShouldPlay(props) {
 
   return (
     <div>
-      <p>Should Play: {remoteShouldPlayDescription}</p>
       <div>
         <label>
           <input 
@@ -37,6 +36,7 @@ function ShouldPlay(props) {
           Change Should Play
         </label>
       </div>
+      <p>Should Play: {remoteShouldPlayDescription}</p>
     </div>
   );
 }

@@ -17,7 +17,7 @@ module.exports = {
 
 
   handleIsPlayingChange: function(newIsPlaying) {
-    const numberOfHistoryToKeep = 3;
+    const numberOfHistoryToKeep = 20;
     new Promise((resolve) => {
       resolve();
     }).then(() => {
