@@ -106,11 +106,50 @@ function Private(props) {
   const lastSyningFinishTimeDescription = lastSyningFinishTime === null ? "Not Available" : new Date(lastSyningFinishTime).toLocaleString();
   const ipAddressDescription = ipAddress ? ipAddress : "Not Available";
   const ipLastUpdateAtDescription = ipLastUpdateAt ? new Date(ipLastUpdateAt).toLocaleString() : "Not Available";
+  
+  const _playerInformation = () => {
+    return (
+      <div>
+        <div>
+          <p>Updating Information: {isSyncing ? "Yes" : "No"}</p>
+          <p>Last Sync finish time: {lastSyningFinishTimeDescription}</p>
+          <hr/>
+          <p>Player is playing: {isPlayingDescription}</p>
+          <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
+          <hr/>
+          <p>IP address: {ipAddressDescription}</p>
+          <p>IP address last update at: {ipLastUpdateAtDescription}</p>
+          <hr/>
+          <p>Global switch is ON: {globalSwitchDescription}</p>
+          <div>
+            <label>
+              <input 
+                type='checkbox' 
+                checked={localGlobalSwitch}
+                onChange={_onGlobalSwitchClick}
+                onClick={()=>{}}/>
+              Change Global Switch
+            </label>
+          </div>
+        </div>
+
+      </div>
+    );
+  };
+
+  const _playHistory = () => {
+    // return "playhistory";
+    return (
+      <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
+    );
+  };
 
   // Master Page UI
   const tabsToDisplay = [
-    (() => <ShouldPlay remoteShouldPlay={shouldPlay} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue}/>)(),
-    (() => <DuangOnce api={api}/>)(),
+    ['Player Info', (() => {return _playerInformation()})()],
+    ['Play History', (() => {return _playHistory()})()],
+    ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue}/>)()],
+    ['Duang', (() => <DuangOnce api={api}/>)()],
   ];
   // End Master Page UI
 
@@ -118,48 +157,22 @@ function Private(props) {
     <div>
       <div>
         <button onClick={_handleLogout}>Logout</button>
-      </div>
-      <p>Updating Information: {isSyncing ? "Yes" : "No"}</p>
-      <p>Last Sync finish time: {lastSyningFinishTimeDescription}</p>
-
-      <div>
         <button onClick={_handleManualRefresh}>Refresh</button>
       </div>
 
-      <hr/>
-      <p>IP address: {ipAddressDescription}</p>
-      <p>IP address last update at: {ipLastUpdateAtDescription}</p>
-      <hr/>
-
-      <p>Global switch is ON: {globalSwitchDescription}</p>
-      <div>
-        <label>
-          <input 
-            type='checkbox' 
-            checked={localGlobalSwitch}
-            onChange={_onGlobalSwitchClick}
-            onClick={()=>{}}/>
-          Change Global Switch
-        </label>
-      </div>
-
-      <hr/>
-      <p>Player is playing: {isPlayingDescription}</p>
-      <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
-      <hr/>
-      <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
       <hr/>
       <div>
         <AppBar position="static" color="default">
           <Tabs value={displayTabIdx} 
             onChange={_handleTabChange}>
-            <Tab label="Should Play"/>
-            <Tab label="Duang"/>
+            {tabsToDisplay.map((tabInfo) => {
+              return <Tab label={tabInfo[0]}/>
+            })}
           </Tabs>
         </AppBar>
       </div>
       <div>
-        {tabsToDisplay[displayTabIdx]}
+        {tabsToDisplay[displayTabIdx][1]}
       </div>
     </div>
   );
