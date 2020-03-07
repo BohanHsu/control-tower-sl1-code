@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import { AppBar, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Container, Tab, Tabs } from '@material-ui/core';
 
 import AuthServices from '../services/authServices';
 import DashboardServices from '../services/dashboardServices';
@@ -154,27 +154,32 @@ function Private(props) {
   // End Master Page UI
 
   return (
-    <div>
+    <Container>
       <div>
-        <button onClick={_handleLogout}>Logout</button>
-        <button onClick={_handleManualRefresh}>Refresh</button>
-      </div>
+        <div>
+          <button onClick={_handleLogout}>Logout</button>
+          <button onClick={_handleManualRefresh}>Refresh</button>
+        </div>
 
-      <hr/>
-      <div>
-        <AppBar position="static" color="default">
-          <Tabs value={displayTabIdx} 
-            onChange={_handleTabChange}>
-            {tabsToDisplay.map((tabInfo) => {
-              return <Tab label={tabInfo[0]}/>
-            })}
-          </Tabs>
-        </AppBar>
+        <hr/>
+        <div>
+          <AppBar position="relative" color="default">
+            <Tabs value={displayTabIdx}
+              onChange={_handleTabChange}
+              variant="scrollable"
+              scrollButtons="auto">
+              {tabsToDisplay.map((tabInfo) => {
+                return <Tab label={tabInfo[0]}/>
+              })}
+            </Tabs>
+          </AppBar>
+        </div>
+        <div>
+          {tabsToDisplay[displayTabIdx][1]}
+        </div>
+        <hr/>
       </div>
-      <div>
-        {tabsToDisplay[displayTabIdx][1]}
-      </div>
-    </div>
+    </Container>
   );
 }
 
