@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import DuangRequestServices from '../services/duangRequestServices';
+import DuangHistory from './duangOnceComponent/DuangHistory';
 
 function DuangOnce(props) {
   const api = props.api;
@@ -52,6 +53,8 @@ function DuangOnce(props) {
     })();
   };
 
+  const _deleteDuangHandle = _onDeleteADuang;
+
   useEffect(_refreshHistory, []);
 
   return (
@@ -60,68 +63,10 @@ function DuangOnce(props) {
       <button onClick={_onRequestADuang}>
         Request A Duang
       </button>
-      <hr/>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>
-              <p>Index</p>
-            </th>
-            <th>
-              <p>Request ID</p>
-            </th>
-            <th>
-              <p>Duang Requested Time</p>
-            </th>
-            <th>
-              <p>Request Sent To Worker Time</p>
-            </th>
-            <th>
-              <p>Request Closed Time</p>
-            </th>
-            <th>
-              <p>Current State</p>
-            </th>
-            <th>
-              <p>Reject Reason</p>
-            </th>
-            <th>
-              <p>Delete</p>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {duangRequestHistory.map((history, idx) => {
-            return (
-              <tr key={`duang-request-history-${idx}`}>
-                <td>
-                  <p>{idx + 1}</p>
-                </td>
-                <td>
-                  <p>{history.requestId}</p>
-                </td>
-                <td>
-                  <p>{new Date(history.requestedAt).toLocaleString()}</p>
-                </td>
-                <td>
-                  <p>{history.sentToWorkerAt != null && new Date(history.sentToWorkerAt).toLocaleString()}</p>
-                </td>
-                <td>
-                  <p>{history.requestClosedAt != null && new Date(history.requestClosedAt).toLocaleString()}</p>
-                </td>
-                <td>
-                  <p>{history.currentState}</p>
-                </td>
-                <td>
-                  <p>{history.rejectReason}</p>
-                </td>
-                <td>
-                  {history.requestClosedAt == null && (<button onClick={() => _onDeleteADuang(history.requestId)}>Delete</button>)}
-                </td>
-              </tr>);
-          })}
-        </tbody>
-      </table>
+
+      <DuangHistory 
+        duangRequestHistory={duangRequestHistory} 
+        deleteDuangHandle={_deleteDuangHandle}/>
     </div>
   );
 }
