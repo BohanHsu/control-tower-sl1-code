@@ -2,6 +2,8 @@ const controllers = require('./controllers');
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const https = require('https');
+const fs = require('fs');
 
 const app = express();
 
@@ -18,8 +20,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../..', 'client/build', 'index.html'));
   });
 }
-
-// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/control-tower');
 
 const MONGODB_URL =
   process.env.MONGOLAB_URI ||
@@ -43,3 +43,13 @@ mongoose.connection.on('error', function (err) {
 app.listen(PORT, () => {
   console.log(`Our app is running on port ${ PORT }`);
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  // localhost
+
+  let privateKey  = fs.readFileSync('../../ssl/selfsigned.key', 'utf8');
+  let certificate = fs.readFileSync('../../ssl/selfsigned.crt', 'utf8');
+  const credentials = {key: privateKey, cert: certificate};
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(8443);
+}
