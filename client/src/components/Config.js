@@ -33,8 +33,6 @@ function Config(props) {
         setRawServerConfigData(resp.data);
       }
 
-      // {"humanOverrideConfig":"","humanOverrideConfigLastUpdateTime":"1970-01-01T00:00:00.000Z","workerReportedConfig":"","workerReportedAvailableMp3Files":[],"workerReportConfigTime":"1970-01-01T00:00:00.000Z"}
-
       setIsSyncing(false);
       setLastSyningFinishTime(new Date().getTime());
 
@@ -80,22 +78,22 @@ function Config(props) {
   const isSyncingDescription = isSyncing ? "Yes" : "No";
   const lastSyningFinishTimeDescription = lastSyningFinishTime === null ? "Not Available" : new Date(lastSyningFinishTime).toLocaleString();
 
-  let humanOverrideConfig = "";
+  let humanOverrideConfig = "{}";
   let humanOverrideConfigLastUpdateTimeStamp = "";
-  let workerReportedConfig = "";
-  // let workerReportedAvailableMp3Files = [];
+  let workerReportedConfig = "{}";
   let workerReportConfigTimeStamp = "";
   if (rawServerConfigData) {
     humanOverrideConfig = rawServerConfigData.humanOverrideConfig;
     humanOverrideConfigLastUpdateTimeStamp = new Date(rawServerConfigData.humanOverrideConfigLastUpdateTime).getTime();
     workerReportedConfig = rawServerConfigData.workerReportedConfig;
-    // workerReportedAvailableMp3Files = rawServerConfigData.workerReportedAvailableMp3Files;
     workerReportConfigTimeStamp = new Date(rawServerConfigData.workerReportConfigTime).getTime();
   }
 
   const humanOverrideConfigDescription = humanOverrideConfig;
+  const humanOverrideConfigPrettyDescription = JSON.stringify(JSON.parse(humanOverrideConfig), null, 2);
   const humanOverrideConfigLastUpdateTimeDescription = humanOverrideConfigLastUpdateTimeStamp === 0 ? "Not Available" : new Date(humanOverrideConfigLastUpdateTimeStamp).toLocaleString();
   const workerReportedConfigDescription = workerReportedConfig;
+  const workerReportedConfigPrettyDescription = JSON.stringify(JSON.parse(workerReportedConfig), null, 2);
   const workerReportConfigTimeDescription = workerReportConfigTimeStamp === 0 ? "Not Available" : new Date(workerReportConfigTimeStamp).toLocaleString();
 
   return (
@@ -113,11 +111,15 @@ function Config(props) {
 
       <hr/>
 
-      <p>Override Config Overview: {humanOverrideConfigDescription}</p>
+      <h3>Override Config Overview</h3>
+      <pre>{humanOverrideConfigPrettyDescription}</pre>
+      <p>raw value: {humanOverrideConfigDescription}</p>
       <p>Override Config update time: {humanOverrideConfigLastUpdateTimeDescription}</p>
 
       <hr/>
-      <p>Worker Reported Config: {workerReportedConfigDescription}</p>
+      <h3>Worker Reported Config</h3>
+      <pre>{workerReportedConfigPrettyDescription}</pre>
+      <p>raw value: {workerReportedConfigDescription}</p>
       <p>Worker Report time: {workerReportConfigTimeDescription}</p>
 
       <hr/>
@@ -148,7 +150,7 @@ function Config(props) {
       <div>
         <TextField
           id="standard-full-width"
-          label="Config"
+          label="New Config"
           style={{ margin: 8 }}
           placeholder=""
           helperText="Must be valid JSON"
