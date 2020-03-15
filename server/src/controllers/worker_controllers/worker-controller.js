@@ -69,7 +69,7 @@ module.exports = function() {
     }).then((overrideConfig) => {
       let response = {
         globalSwitch: gGlobalSwitchResp,
-        shouldPlay: gShouldPlayResp
+        shouldPlay: gShouldPlayResp,
       };
 
       if (gDuang) {
@@ -86,11 +86,9 @@ module.exports = function() {
 
   app.post('/reportConfig', function(req, res) {
     const reportedConfigJSON = req.body.config;
-    const availableMp3FilesString = req.body.availableMp3s;
+    const availableMp3Files = req.body.availableMp3s;
 
-    const availableMp3Files = availableMp3FilesString.split(" ");
-
-    configService.findOrCreateConfig.workerReport(reportedConfigJSON, availableMp3Files).then(() => {
+    configService.workerReport(reportedConfigJSON, availableMp3Files).then(() => {
       res.json({});
     });
   });
