@@ -8,9 +8,9 @@ function findOrCreateConfig() {
 
     return Config.create({
       sendToWorker: false,
-      humanOverrideConfig: "",
+      humanOverrideConfig: "{}",
       humanOverrideConfigLastUpdateTime: new Date(0),
-      workerReportedConfig: "",
+      workerReportedConfig: "{}",
       workerReportedAvailableMp3Files: [],
       workerReportConfigTime: new Date(0),
     })
