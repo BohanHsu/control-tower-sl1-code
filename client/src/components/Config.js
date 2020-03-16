@@ -69,6 +69,7 @@ function Config(props) {
       (async () => {
         const resp = await configServices.updateConfig(minimuzedConfig);
         if (resp && resp.data.updated) {
+          setLocalConfigJSONStr("");
           _refreshHistory();
         }
       })();
@@ -168,6 +169,33 @@ function Config(props) {
           Submit
         </Button>
       </div>
+
+      <h3>Config History</h3>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Config</TableCell>
+              <TableCell>Created At</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rawServerConfigData && rawServerConfigData.configHistories.map((configHistory, idx) => {
+
+              return (
+                <TableRow key={`config-history-${idx}`}>
+                  <TableCell component="th" scope="row">
+                    <pre>{JSON.stringify(JSON.parse(configHistory.workerReportedConfig), null, 2)}</pre>
+                  </TableCell>
+                  <TableCell align="right">
+                    <p>{new Date(configHistory.created_at).toLocaleString()}</p>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
     </div>
   );
