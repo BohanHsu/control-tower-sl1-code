@@ -1,6 +1,7 @@
 const express = require('express');
 
 const configService = require('../../services/config-service');
+const configHistoryService = require('../../services/config-history-service');
 
 const responder = require('./responder');
 
@@ -30,13 +31,19 @@ module.exports = function() {
   });
 
   app.get('/config', function(req, res) {
-    return configService.getConfig().then((configObj) => {
+    let gConfigHistories = null;
+    return configHistoryService.getAllHistory().then((configHistories) => {
+      gConfigHistories = configHistories;
+
+      return configService.getConfig();
+    }).then((configObj) => {
       return responder.json(req, res, {
         humanOverrideConfig: configObj.humanOverrideConfig,
         humanOverrideConfigLastUpdateTime: configObj.humanOverrideConfigLastUpdateTime,
         workerReportedConfig: configObj.workerReportedConfig,
         workerReportedAvailableMp3Files: configObj.workerReportedAvailableMp3Files,
         workerReportConfigTime: configObj.workerReportConfigTime,
+        configHistories: gConfigHistories,
       });
     });
   });

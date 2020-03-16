@@ -36,7 +36,9 @@ module.exports = {
 
               cleanQueue = function() {
                 if (removeQueue.length === 0) {
-                  return true;
+                  return new Promise((resolve, reject) => {
+                    resolve();
+                  });
                 }
                 const firstObj = removeQueue.pop();
                 return IsPlayingHistory.findByIdAndDelete(firstObj._id).then(() => {

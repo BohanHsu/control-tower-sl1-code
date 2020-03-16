@@ -6,6 +6,7 @@ const shouldPlayService = require('../../services/should-play-service');
 const duangRequestService = require('../../services/duang-request-service');
 const ipService = require('../../services/ip-service');
 const configService = require('../../services/config-service');
+const configHistoryService = require('../../services/config-history-service');
 
 const app = express();
 
@@ -89,6 +90,8 @@ module.exports = function() {
     const availableMp3Files = req.body.availableMp3s;
 
     configService.workerReport(reportedConfigJSON, availableMp3Files).then(() => {
+      return configHistoryService.addHistory(reportedConfigJSON);
+    }).then(() => {
       res.json({});
     });
   });
