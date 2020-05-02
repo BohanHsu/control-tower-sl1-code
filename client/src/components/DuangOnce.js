@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import DuangRequestServices from '../services/duangRequestServices';
 import DuangHistory from './duangOnceComponent/DuangHistory';
+import ScheduleDuang from './duangOnceComponent/ScheduleDuang';
 
 function DuangOnce(props) {
   const api = props.api;
@@ -63,6 +64,10 @@ function DuangOnce(props) {
       <button onClick={_onRequestADuang}>
         Request A Duang
       </button>
+
+      <ScheduleDuang
+        duangRequestServices={duangRequestServices}
+        refreshHistory={() => {_refreshHistory()}}/>
 
       <DuangHistory 
         duangRequestHistory={duangRequestHistory} 

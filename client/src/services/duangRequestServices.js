@@ -7,8 +7,8 @@ class DuangRequestServices {
     return this._api.get('/api/ui/operations/duangRequestHistory');
   }
 
-  async requestDuang() {
-    return this._api.post('/api/ui/operations/requestDuang', {});
+  async requestDuang(duangSchedule={}) {
+    return this._api.post('/api/ui/operations/requestDuang', duangSchedule);
   }
 
   async cancelDuang(requestId) {
