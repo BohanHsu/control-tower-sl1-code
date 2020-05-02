@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 module.exports = (function () {
   const duangRequestSchema = mongoose.Schema({
     requestedAt: Date,
+    scheduleDuangTime: Date,
     sentToWorkerAt: Date,
     requestClosedAt: Date,
     currentState: {

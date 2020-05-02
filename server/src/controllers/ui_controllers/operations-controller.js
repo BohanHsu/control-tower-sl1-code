@@ -2,6 +2,7 @@ const express = require('express');
 const globalSwitchService = require('../../services/global-switch-service');
 const shouldPlayService = require('../../services/should-play-service');
 const duangRequestService =require('../../services/duang-request-service');
+const timeConverter = require('../../utils/time-converter');
 
 const responder = require('./responder');
 
@@ -34,7 +35,20 @@ module.exports = function() {
   });
 
   app.post('/requestDuang', function(req, res) {
-    duangRequestService.requestDuang().then((duangRequestObj) => {
+    let utcDate = null;
+
+    if (req.body.schedule) {
+      const year = req.body.duangYear;
+      const month = req.body.duangMonth;
+      const date = req.body.duangDate;
+      const hour = req.body.duangHour;
+      const minute = req.body.duangMinute;
+      const second = req.body.duangSecond;
+
+      utcDate = timeConverter.fromNYCYMDHMSToUTCDate(year, month, date, hour, minute, second);
+    }
+
+    duangRequestService.requestDuang(utcDate).then((duangRequestObj) => {
       responder.json(req, res, {
         created: !!duangRequestObj,
       }, null);
