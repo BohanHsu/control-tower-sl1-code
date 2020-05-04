@@ -4,14 +4,20 @@ const DuangRequest = require('../models/duang-request-model');
 const globalSwitchService = require('./global-switch-service');
 
 module.exports = {
-  requestDuang: function() {
-    const numberOfRecordToKeep = 20;
+  requestDuang: function(scheduleTimeUTCDate = null) {
+    const numberOfRecordToKeep = 100;
 
     let gDuangRequestObj = null
-    return DuangRequest.create({
+    let newDuang = {
       requestedAt: new Date(),
       currentState: 'notHandleYet',
-    }).then((duangRequestObj) => {
+    };
+
+    if (scheduleTimeUTCDate) {
+      newDuang.scheduleDuangTime = scheduleTimeUTCDate;
+    }
+
+    return DuangRequest.create(newDuang).then((duangRequestObj) => {
       gDuangRequestObj = duangRequestObj;
 
       return DuangRequest.find({}).sort({requestedAt: 1}).exec();
@@ -70,8 +76,29 @@ module.exports = {
   },
 
   checkNextDuangRequest: function() {
-    return DuangRequest.findOne({currentState: 'notHandleYet'}).sort({requestedAt: 1})
-    .exec().then((duangRequestObj, err) => {
+    return DuangRequest.findOne({
+      currentState: 'notHandleYet',
+      scheduleDuangTime: {'$exists': false}
+    }).sort({requestedAt: 1}).exec().then((duangRequestObj, err) => {
+      if (!duangRequestObj) {
+        return null;
+      }
+
+      return duangRequestObj;
+    }).then((duangRequestObj) => {
+      if (duangRequestObj) {
+        return duangRequestObj;
+      }
+
+      const nowDate = new Date();
+
+      return DuangRequest.findOne({
+        currentState: 'notHandleYet',
+        scheduleDuangTime: {'$exists': true},
+        scheduleDuangTime: {'$lt': nowDate},
+      }).sort({requestedAt: 1}).exec();
+
+    }).then((duangRequestObj, err) => {
       if (!duangRequestObj) {
         return null;
       }
@@ -156,6 +183,10 @@ module.exports = {
 
           if (obj.rejectReason) {
             result.rejectReason = obj.rejectReason;
+          }
+
+          if (obj.scheduleDuangTime) {
+            result.scheduleDuangTime = new Date(obj.scheduleDuangTime).getTime();
           }
 
           return result;

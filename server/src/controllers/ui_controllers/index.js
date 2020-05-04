@@ -3,6 +3,7 @@ const express = require('express');
 const authController = require('./auth-controller');
 const dashboardController = require('./dashboard-controller');
 const operationsController = require('./operations-controller');
+const configController = require('./config-controller');
 
 const authMiddleware = require('../../middlewares/auth-middleware');
 
@@ -15,6 +16,8 @@ module.exports = function() {
   app.get('/dashboard', dashboardController);
 
   app.use('/operations', operationsController());
+
+  app.use('/config', configController());
 
   return app;
 };

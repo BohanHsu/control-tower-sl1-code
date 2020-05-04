@@ -34,6 +34,9 @@ function DuangHistory(props) {
                 <p>Reject Reason</p>
               </TableCell>
               <TableCell align="right">
+                <p>Duang Scheduled Time</p>
+              </TableCell>
+              <TableCell align="right">
                 <p>Duang Requested Time</p>
               </TableCell>
               <TableCell align="right">
@@ -62,6 +65,9 @@ function DuangHistory(props) {
                   </TableCell>
                   <TableCell align="right">
                     <p>{history.rejectReason}</p>
+                  </TableCell>
+                  <TableCell align="right">
+                    <p>{history.scheduleDuangTime != null && new Date(history.scheduleDuangTime).toLocaleString()}</p>
                   </TableCell>
                   <TableCell align="right">
                     <p>{new Date(history.requestedAt).toLocaleString()}</p>
