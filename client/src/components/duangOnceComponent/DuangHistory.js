@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Time from '../utils/Time';
 
 function DuangHistory(props) {
   const duangRequestHistory = props.duangRequestHistory;
@@ -67,16 +68,16 @@ function DuangHistory(props) {
                     <p>{history.rejectReason}</p>
                   </TableCell>
                   <TableCell align="right">
-                    <p>{history.scheduleDuangTime != null && new Date(history.scheduleDuangTime).toLocaleString()}</p>
+                    <Time time={history.scheduleDuangTime}/>
                   </TableCell>
                   <TableCell align="right">
-                    <p>{new Date(history.requestedAt).toLocaleString()}</p>
+                    <Time time={history.requestedAt}/>
                   </TableCell>
                   <TableCell align="right">
-                    <p>{history.sentToWorkerAt != null && new Date(history.sentToWorkerAt).toLocaleString()}</p>
+                    <Time time={history.sentToWorkerAt}/>
                   </TableCell>
                   <TableCell align="right">
-                    <p>{history.requestClosedAt != null && new Date(history.requestClosedAt).toLocaleString()}</p>
+                    <Time time={history.requestClosedAt}/>
                   </TableCell>
                   <TableCell align="right">
                     <p>{history.requestId}</p>
