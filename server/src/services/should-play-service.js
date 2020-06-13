@@ -31,5 +31,20 @@ module.exports = {
       return shouldPlayObj.shouldPlay === shouldPlayVal;
     });
   },
+
+  updateShouldPlayWindow: function(shouldPlayWindowVal) {
+    return ShouldPlay.findOne({}).then((shouldPlayObj, err) => {
+      if (err) {
+        return null;
+      }
+
+      return shouldPlayObj;
+    }).then((shouldPlayObj) => {
+      shouldPlayObj.shouldPlayWindow = shouldPlayWindowVal;
+      return shouldPlayObj.save();
+    }).then((shouldPlayObj) => {
+      return shouldPlayObj.shouldPlayWindow === shouldPlayWindowVal;
+    });
+  },
 };
 

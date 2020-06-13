@@ -18,6 +18,7 @@ function Private(props) {
   // From dashboard-api
   const [globalSwitch, setGlobalSwitch,] = useState(null);
   const [shouldPlay, setShouldPlay] = useState(null);
+  const [useShouldPlayWindow, setUseShouldPlayWindow] = useState(null);
   const [isPlaying, setIsPlaying] = useState(null);
   const [lastWorkerReportTimestamp, setLastWorkerReportTimestamp] = useState(null);
   const [ipAddress, setIpAddress] = useState(null);
@@ -45,6 +46,7 @@ function Private(props) {
         setGlobalSwitch(resp.data.globalSwitch.isOn);
         setLocalGlobalSwitch(resp.data.globalSwitch.isOn)
         setShouldPlay(resp.data.shouldPlay.shouldPlay);
+        setUseShouldPlayWindow(resp.data.shouldPlay.useShouldPlayWindow);
         setLocalShouldPlay(resp.data.shouldPlay.shouldPlay);
         setIsPlaying(resp.data.isPlaying.isPlaying);
 
@@ -149,7 +151,7 @@ function Private(props) {
   const tabsToDisplay = [
     ['Player Info', (() => {return _playerInformation()})()],
     ['Play History', (() => {return _playHistory()})()],
-    ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue}/>)()],
+    ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} remoteUseShouldPlayWindow={useShouldPlayWindow} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue} api={api}/>)()],
     ['Duang', (() => <DuangOnce api={api}/>)()],
     ['Config', (() => <Config api={api}/>)()],
   ];
