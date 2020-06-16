@@ -34,7 +34,6 @@ module.exports = {
 
   currentYMDAtNY: function() {
     const nytString = moment().tz("America/New_York").format('YYYY:MM:DD');
-    console.log('xbh2', nytString);
     const nytArray = nytString.split(':');
     const year = parseInt(nytArray[0]);
     const month = parseInt(nytArray[1]);

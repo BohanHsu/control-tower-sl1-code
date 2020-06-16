@@ -88,9 +88,6 @@ module.exports = {
       let isIn = false;
       const {year, month, date} = timeConverter.currentYMDAtNY();
 
-      console.log('xbh1', year, month, date);
-
-
       shouldPlayWindowObjs.forEach((shouldPlayWindowObjs) => {
         if (!isIn) {
           const {
@@ -121,8 +118,6 @@ module.exports = {
           );
 
           const nowUTC = new Date();
-
-          console.log(startTimeUTC, nowUTC, endTimeUTC);
 
           if (startTimeUTC.getTime() <= nowUTC.getTime() && nowUTC.getTime() <= endTimeUTC.getTime()) {
             isIn = true;

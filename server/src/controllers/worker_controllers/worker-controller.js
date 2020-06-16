@@ -60,13 +60,11 @@ module.exports = function() {
       gShouldPlayResp = shouldPlay;
 
       if (!gShouldPlayResp && gUseShouldPlayWindow) {
-        console.log('xbh3', "check windows");
         return shouldPlayWindowService.isNYTInAtLeastOneWindow();
       } else {
         return gShouldPlayResp;
       }
     }).then((shouldPlay) => {
-        console.log('xbh4', "g", gShouldPlayResp, "local", shouldPlay);
       if (!gShouldPlayResp) {
         gShouldPlayResp = shouldPlay;
       }
