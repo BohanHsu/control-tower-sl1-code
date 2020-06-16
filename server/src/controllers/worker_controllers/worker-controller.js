@@ -3,6 +3,7 @@ const workerService = require('../../services/worker-service');
 const isPlayingService = require('../../services/is-playing-service');
 const globalSwitchService = require('../../services/global-switch-service');
 const shouldPlayService = require('../../services/should-play-service');
+const shouldPlayWindowService = require('../../services/should-play-window-service');
 const duangRequestService = require('../../services/duang-request-service');
 const ipService = require('../../services/ip-service');
 const configService = require('../../services/config-service');
@@ -14,6 +15,7 @@ module.exports = function() {
   app.post('/ping', function (req, res) {
     let gGlobalSwitchResp = false;
     let gShouldPlayResp = false;
+    let gUseShouldPlayWindow = false;
     let gDuang = null;
 
     const isPlaying = !!(req.body.isPlaying);
@@ -50,11 +52,22 @@ module.exports = function() {
         }
 
         return shouldPlayService.queryShouldPlay().then((shouldPlayObj) => {
+          gUseShouldPlayWindow = shouldPlayObj.shouldPlayWindow;
           return shouldPlayObj.shouldPlay;
         });
       });
     }).then((shouldPlay) => {
       gShouldPlayResp = shouldPlay;
+
+      if (!gShouldPlayResp && gUseShouldPlayWindow) {
+        return shouldPlayWindowService.isNYTInAtLeastOneWindow();
+      } else {
+        return gShouldPlayResp;
+      }
+    }).then((shouldPlay) => {
+      if (!gShouldPlayResp) {
+        gShouldPlayResp = shouldPlay;
+      }
 
       return duangRequestService.checkNextDuangRequest()
     }).then((duang) => {

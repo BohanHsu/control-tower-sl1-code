@@ -1,6 +1,7 @@
 const express = require('express');
 const globalSwitchService = require('../../services/global-switch-service');
 const shouldPlayService = require('../../services/should-play-service');
+const shouldPlayWindowService = require('../../services/should-play-window-service');
 const duangRequestService =require('../../services/duang-request-service');
 const timeConverter = require('../../utils/time-converter');
 
@@ -30,6 +31,54 @@ module.exports = function() {
     shouldPlayService.updateShouldPlay(shouldPlayVal).then((result) => {
       responder.json(req, res, {
         updated: result,
+      }, null);
+    });
+  });
+
+  app.post('/shouldPlayWindow/flip', function(req, res) {
+    const shouldUseShouldPlayWindow = req.body.shouldUseShouldPlayWindow;
+
+    shouldPlayService.updateShouldPlayWindow(shouldUseShouldPlayWindow).then((result) => {
+      responder.json(req, res, {
+        updated: result,
+      }, null);
+    });
+  });
+
+  app.post('/shouldPlayWindow/add', function(req, res) {
+    const startHourInt = parseInt(req.body.startHour);
+    const startMinuteInt = parseInt(req.body.startMinute);
+    const startSecondInt = parseInt(req.body.startSecond);
+    const endHourInt = parseInt(req.body.endHour);
+    const endMinuteInt = parseInt(req.body.endMinute);
+    const endSecondInt = parseInt(req.body.endSecond);
+
+    shouldPlayWindowService.createShouldPlayWindow(
+      startHourInt,
+      startMinuteInt,
+      startSecondInt,
+      endHourInt,
+      endMinuteInt,
+      endSecondInt,
+    ).then((shouldPlayWindowId) => {
+      responder.json(req, res, {
+        created: shouldPlayWindowId != null,
+      }, null);
+    });
+  });
+
+  app.post('/shouldPlayWindow/remove', function(req, res) {
+    return shouldPlayWindowService.deleteShouldPlayWindow(req.body.shouldPlayWindowId).then((updated) => {
+      responder.json(req, res, {
+        updated,
+      }, null);
+    });
+  });
+
+  app.get('/shouldPlayWindow', function (req, res) {
+    return shouldPlayWindowService.findAllShouldPlayWindow().then((shouldPlayWindows) => {
+      responder.json(req, res, {
+        shouldPlayWindows
       }, null);
     });
   });

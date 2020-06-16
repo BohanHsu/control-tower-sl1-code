@@ -27,7 +27,7 @@ module.exports = function (req, res) {
     return isPlayingHistorySerivce.queryIsPlayingHistory();
   }).then((isPlayingHistories) => {
     responder.json(req, res, {
-      shouldPlay: {shouldPlay: gShouldPlayObj.shouldPlay},
+      shouldPlay: {shouldPlay: gShouldPlayObj.shouldPlay, useShouldPlayWindow: gShouldPlayObj.shouldPlayWindow || false},
       globalSwitch: {isOn: gGlobalSwitchObj.isOn},
       isPlaying: {
         isPlaying: gIsPlayingObj.isPlaying,

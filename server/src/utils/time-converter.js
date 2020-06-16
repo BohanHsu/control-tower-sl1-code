@@ -31,4 +31,18 @@ module.exports = {
     const utcTime = new Date(utcTimeString);
     return utcTime;
   },
+
+  currentYMDAtNY: function() {
+    const nytString = moment().tz("America/New_York").format('YYYY:MM:DD');
+    const nytArray = nytString.split(':');
+    const year = parseInt(nytArray[0]);
+    const month = parseInt(nytArray[1]);
+    const date = parseInt(nytArray[2]);
+
+    return {
+      year,
+      month,
+      date,
+    };
+  },
 };
