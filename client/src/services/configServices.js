@@ -12,6 +12,20 @@ class ConfigServices {
       humanOverrideConfig: configJsonString
     });
   }
+
+  async setPinConfigHistoryValue(configHistoryId, pinned) {
+    return this._api.post('/api/ui/config/updateConfigHistory', {
+      configHistoryId,
+      pinned,
+    });
+  }
+
+  async updateConfigHistoryDescription(configHistoryId, description) {
+    return this._api.post('/api/ui/config/updateConfigHistory', {
+      configHistoryId,
+      description,
+    });
+  }
 }
 
 export default ConfigServices;

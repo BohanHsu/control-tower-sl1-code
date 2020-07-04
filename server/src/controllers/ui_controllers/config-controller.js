@@ -48,5 +48,26 @@ module.exports = function() {
     });
   });
 
+  app.post('/updateConfigHistory', function(req, res) {
+    if (req && req.body) {
+      const id = req.body.configHistoryId;
+
+      const toUpdate = {};
+      if (req.body.pinned === true || req.body.pinned === false) {
+        toUpdate.pinned = req.body.pinned;
+      }
+
+      if (req.body.description) {
+        toUpdate.description = req.body.description;
+      }
+
+      return configHistoryService.updateConfigHistory(id, toUpdate).then(() => {
+        responder.json(req, res, {});
+      });
+    }
+
+    responder.json(req, res, {});
+  });
+
   return app;
 }

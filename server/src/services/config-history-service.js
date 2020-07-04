@@ -14,7 +14,7 @@ module.exports = {
         });
       }
     }).then(() => {
-      return ConfigHistory.find({}).sort({created_at: -1}).exec().then((configHistories) => {
+      return ConfigHistory.find({$or: [{pinned: false}, {pinned: null}]}).sort({created_at: -1}).exec().then((configHistories) => {
         let toRemoveQueue = [];
         configHistories.forEach((configHistory, idx) => {
           if (idx >= numberOfRecordToKeep) {
@@ -46,10 +46,27 @@ module.exports = {
     return ConfigHistory.find({}).sort({created_at: -1}).exec().then((configHistories) => {
       return configHistories.map((configHistory) => {
         return {
+          id: configHistory._id,
           created_at: configHistory.created_at,
           workerReportedConfig: configHistory.workerReportedConfig,
+          pinned: configHistory.pinned,
+          description: configHistory.description,
         };
       });
+    });
+  },
+
+  updateConfigHistory: function(id, fieldsToUpdate) {
+    return ConfigHistory.findOne({_id: id}).exec().then((configHistory) => {
+      if (fieldsToUpdate.pinned === true || fieldsToUpdate.pinned === false) {
+        configHistory.pinned = fieldsToUpdate.pinned;
+      }
+
+      if (fieldsToUpdate.description) {
+        configHistory.description = fieldsToUpdate.description;
+      }
+
+      return configHistory.save();
     });
   },
 };
