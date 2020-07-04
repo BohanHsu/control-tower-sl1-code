@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 import ConfigServices from '../services/configServices';
+import ConfigHistory from './configComponent/ConfigHistory';
 
 function Config(props) {
   const api = props.api;
@@ -36,12 +37,6 @@ function Config(props) {
       setIsSyncing(false);
       setLastSyningFinishTime(new Date().getTime());
 
-      // TODO why do I need to auto refresh config?
-      // timerId = setInterval(() => {
-      //   console.log('refreshing config');
-      //   _refreshHistory();
-      // }, 5000);
-
       return null;
     })();
   }, [timerId]);
@@ -57,7 +52,6 @@ function Config(props) {
   };
 
   const _handleSubmit = () => {
-    console.log('_handleSubmit');
     // validate JSON
     let configBefore = localConfigJSONStr;
     let minimuzedConfig = null;
@@ -114,40 +108,15 @@ function Config(props) {
 
       <h3>Override Config Overview</h3>
       <pre>{humanOverrideConfigPrettyDescription}</pre>
-      <p>raw value: {humanOverrideConfigDescription}</p>
       <p>Override Config update time: {humanOverrideConfigLastUpdateTimeDescription}</p>
 
       <hr/>
       <h3>Worker Reported Config</h3>
       <pre>{workerReportedConfigPrettyDescription}</pre>
-      <p>raw value: {workerReportedConfigDescription}</p>
       <p>Worker Report time: {workerReportConfigTimeDescription}</p>
 
       <hr/>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Available Mp3 Files</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rawServerConfigData && rawServerConfigData.workerReportedAvailableMp3Files.map((mp3File, idx) => {
-
-              return (
-                <TableRow key={`worker-report-mp3-files-${idx}`}>
-                  <TableCell component="th" scope="row">
-                    <p>{mp3File}</p>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <hr/>
       <div>
         <TextField
           id="standard-full-width"
@@ -169,34 +138,38 @@ function Config(props) {
           Submit
         </Button>
       </div>
+      <ConfigHistory 
+        configHistories={rawServerConfigData ? rawServerConfigData.configHistories : []}
+        refreshHandle={_refreshHistory}
+        configServices={configServices}
+      />
 
-      <h3>Config History</h3>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Config</TableCell>
-              <TableCell>Created At</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rawServerConfigData && rawServerConfigData.configHistories.map((configHistory, idx) => {
+      <div>
+        <h3>MP3 Files</h3>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Available Mp3 Files</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rawServerConfigData && rawServerConfigData.workerReportedAvailableMp3Files.map((mp3File, idx) => {
 
-              return (
-                <TableRow key={`config-history-${idx}`}>
-                  <TableCell component="th" scope="row">
-                    <pre>{JSON.stringify(JSON.parse(configHistory.workerReportedConfig), null, 2)}</pre>
-                  </TableCell>
-                  <TableCell align="right">
-                    <p>{new Date(configHistory.created_at).toLocaleString()}</p>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                return (
+                  <TableRow key={`worker-report-mp3-files-${idx}`}>
+                    <TableCell component="th" scope="row">
+                      <p>{mp3File}</p>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
 
+      <hr/>
     </div>
   );
 }
