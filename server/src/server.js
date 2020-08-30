@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const MONGODB_URL =
+  process.env.ATLAS_URI ||
   process.env.MONGOLAB_URI ||
   process.env.MONGOHQ_URL ||
   process.env.MONGODB_URI ||
