@@ -64,12 +64,8 @@ function ScheduleDuang(props) {
       duangSecond: parsedDuangSecond,
     };
 
-    console.log(scheduleDuangTimestamp);
-    // console.log(props.duangRequestServices);
-    // props.duangRequestServices.requestDuang(scheduleDuangTimestamp);
-    //
     (async () => {
-      const resp = await props.duangRequestServices.requestDuang(scheduleDuangTimestamp);
+      const resp = await props.duangRequestServices.requestDuang(scheduleDuangTimestamp, props.localMp3FileGetter());
 
       if (resp && resp.data.created) {
         props.refreshHistory();
@@ -148,7 +144,6 @@ function ScheduleDuang(props) {
       </div>
     </div>
   );
-  //onChange={/*_handleConfigChange*/}
 
 }
 

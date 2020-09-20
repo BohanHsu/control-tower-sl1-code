@@ -87,7 +87,11 @@ module.exports = function() {
       };
 
       if (gDuang) {
-        response.duang = gDuang;
+        response.duang = gDuang.duangRequestId;
+      }
+
+      if (gDuang && gDuang.optionalAudioFilePath) {
+        response.duangAudioFilePath = gDuang.optionalAudioFilePath;
       }
 
       if (overrideConfig) {

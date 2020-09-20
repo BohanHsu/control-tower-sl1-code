@@ -4,7 +4,7 @@ const DuangRequest = require('../models/duang-request-model');
 const globalSwitchService = require('./global-switch-service');
 
 module.exports = {
-  requestDuang: function(scheduleTimeUTCDate = null) {
+  requestDuang: function(scheduleTimeUTCDate = null, optionalAudioFilePath = null) {
     const numberOfRecordToKeep = 100;
 
     let gDuangRequestObj = null
@@ -15,6 +15,10 @@ module.exports = {
 
     if (scheduleTimeUTCDate) {
       newDuang.scheduleDuangTime = scheduleTimeUTCDate;
+    }
+
+    if (optionalAudioFilePath) {
+      newDuang.optionalAudioFilePath = optionalAudioFilePath;
     }
 
     return DuangRequest.create(newDuang).then((duangRequestObj) => {
@@ -129,7 +133,10 @@ module.exports = {
       return duangRequestObj.save();
     }).then((duangRequestObj) => {
       if (duangRequestObj) {
-        return duangRequestObj._id;
+        return {
+          duangRequestId: duangRequestObj._id,
+          optionalAudioFilePath: duangRequestObj.optionalAudioFilePath,
+        };
       }
 
       return null;
@@ -187,6 +194,10 @@ module.exports = {
 
           if (obj.scheduleDuangTime) {
             result.scheduleDuangTime = new Date(obj.scheduleDuangTime).getTime();
+          }
+
+          if (obj.optionalAudioFilePath) {
+            result.optionalAudioFilePath = obj.optionalAudioFilePath;
           }
 
           return result;

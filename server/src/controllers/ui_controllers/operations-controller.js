@@ -85,6 +85,7 @@ module.exports = function() {
 
   app.post('/requestDuang', function(req, res) {
     let utcDate = null;
+    let optionalAudioFilePath = null;
 
     if (req.body.schedule) {
       const year = req.body.duangYear;
@@ -97,7 +98,11 @@ module.exports = function() {
       utcDate = timeConverter.fromNYCYMDHMSToUTCDate(year, month, date, hour, minute, second);
     }
 
-    duangRequestService.requestDuang(utcDate).then((duangRequestObj) => {
+    if (req.body.optionalAudioFilePath) {
+      optionalAudioFilePath = req.body.optionalAudioFilePath;
+    }
+
+    duangRequestService.requestDuang(utcDate, optionalAudioFilePath).then((duangRequestObj) => {
       responder.json(req, res, {
         created: !!duangRequestObj,
       }, null);

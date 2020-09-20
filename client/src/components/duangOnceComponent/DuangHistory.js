@@ -50,6 +50,9 @@ function DuangHistory(props) {
                 <p>Request ID</p>
               </TableCell>
               <TableCell align="right">
+                <p>Optional Audio File</p>
+              </TableCell>
+              <TableCell align="right">
                 <p>Delete</p>
               </TableCell>
             </TableRow>
@@ -81,6 +84,9 @@ function DuangHistory(props) {
                   </TableCell>
                   <TableCell align="right">
                     <p>{history.requestId}</p>
+                  </TableCell>
+                  <TableCell align="right">
+                    {history.optionalAudioFilePath}
                   </TableCell>
                   <TableCell align="right">
                     {history.requestClosedAt == null && (<button onClick={() => _onDeleteADuang(history.requestId)}>Delete</button>)}

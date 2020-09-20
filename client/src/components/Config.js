@@ -155,7 +155,6 @@ function Config(props) {
             </TableHead>
             <TableBody>
               {rawServerConfigData && rawServerConfigData.workerReportedAvailableMp3Files.map((mp3File, idx) => {
-
                 return (
                   <TableRow key={`worker-report-mp3-files-${idx}`}>
                     <TableCell component="th" scope="row">
