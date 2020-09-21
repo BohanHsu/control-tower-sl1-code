@@ -150,10 +150,10 @@ function Private(props) {
   // Master Page UI
   const tabsToDisplay = [
     ['Player Info', (() => {return _playerInformation()})()],
-    ['Play History', (() => {return _playHistory()})()],
-    ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} remoteUseShouldPlayWindow={useShouldPlayWindow} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue} api={api}/>)()],
     ['Duang', (() => <DuangOnce api={api}/>)()],
     ['Config', (() => <Config api={api}/>)()],
+    ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} remoteUseShouldPlayWindow={useShouldPlayWindow} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue} api={api}/>)()],
+    ['Play History', (() => {return _playHistory()})()],
   ];
   // End Master Page UI
 
