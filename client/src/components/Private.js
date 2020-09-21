@@ -122,6 +122,8 @@ function Private(props) {
   const lastSyningFinishTimeDescription = lastSyningFinishTime === null ? "Not Available" : new Date(lastSyningFinishTime).toLocaleString();
   const ipAddressDescription = ipAddress ? ipAddress : "Not Available";
   const ipLastUpdateAtDescription = ipLastUpdateAt ? new Date(ipLastUpdateAt).toLocaleString() : "Not Available";
+  const timeSinceWorkerUpdatedIp = (Date.now() - new Date(ipLastUpdateAt).getTime()) / 1000;
+  const workerOnlineDescription = timeSinceWorkerUpdatedIp < 10 ? (<span style={{color:'green'}}>(Online)</span>) : (<span>(Offline)</span>);
   
   const _playerInformation = () => {
     return (
@@ -134,7 +136,7 @@ function Private(props) {
           <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
           <hr/>
           <p>IP address: {ipAddressDescription}</p>
-          <p>IP address last update at: {ipLastUpdateAtDescription}</p>
+          <p>IP address last update at: {ipLastUpdateAtDescription}{' '}{workerOnlineDescription}</p>
           <hr/>
           <p>Global switch is ON: {globalSwitchDescription}</p>
           <div>
@@ -154,7 +156,6 @@ function Private(props) {
   };
 
   const _playHistory = () => {
-    // return "playhistory";
     return (
       <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
     );
