@@ -4,10 +4,7 @@ import DuangHistory from './duangOnceComponent/DuangHistory';
 import ScheduleDuang from './duangOnceComponent/ScheduleDuang';
 import ConfigServices from '../services/configServices';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { Button, Select, FormControl, MenuItem, InputLabel } from '@material-ui/core';
 
 const DEFAULT = "Default";
 
@@ -94,7 +91,10 @@ function DuangOnce(props) {
 
   return (
     <div>
-      Duang component
+      <hr/>
+      <div>
+        Select optional audio file:&nbsp;
+      </div>
       <div>
         <FormControl>
           <Select
@@ -111,10 +111,13 @@ function DuangOnce(props) {
         </FormControl>
       </div>
       <hr/>
-      <button onClick={_onRequestADuang}>
+      <Button onClick={_onRequestADuang} 
+        color="primary"
+        variant="contained"
+      >
         Request A Duang
-      </button>
-
+      </Button>
+      <hr/>
       <ScheduleDuang
         duangRequestServices={duangRequestServices}
         refreshHistory={() => {_refreshHistory()}}

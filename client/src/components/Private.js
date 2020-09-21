@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import { AppBar, Container, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Container, Tab, Tabs, Toolbar, Button, Menu, MenuItem } from '@material-ui/core';
 
 import AuthServices from '../services/authServices';
 import DashboardServices from '../services/dashboardServices';
@@ -30,6 +30,8 @@ function Private(props) {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyningFinishTime, setLastSyningFinishTime] = useState(null);
   const [displayTabIdx, setDisplayTabIdx] = useState(0);
+  // Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
   // End Master Page UI
 
   const [localGlobalSwitch, setLocalGlobalSwitch,] = useState(false);
@@ -102,6 +104,17 @@ function Private(props) {
     setDisplayTabIdx(val);
   }
 
+  const _handleMenuBtnClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const _handleMenuClose = (val) => {
+    setAnchorEl(null);
+    if (val != null) {
+      setDisplayTabIdx(val);
+    }
+  };
+
   const globalSwitchDescription = globalSwitch === null ? "Syncing..." : globalSwitch ? "On" : "Off";
   const shouldPlayDescription = shouldPlay === null ? "Syncing..." : shouldPlay ? "On" : "Off";
   const isPlayingDescription = isPlaying === null ? "Syncing..." : isPlaying ? "Yes" : "No";
@@ -109,6 +122,8 @@ function Private(props) {
   const lastSyningFinishTimeDescription = lastSyningFinishTime === null ? "Not Available" : new Date(lastSyningFinishTime).toLocaleString();
   const ipAddressDescription = ipAddress ? ipAddress : "Not Available";
   const ipLastUpdateAtDescription = ipLastUpdateAt ? new Date(ipLastUpdateAt).toLocaleString() : "Not Available";
+  const timeSinceWorkerUpdatedIp = (Date.now() - new Date(ipLastUpdateAt).getTime()) / 1000;
+  const workerOnlineDescription = timeSinceWorkerUpdatedIp < 10 ? (<span style={{color:'green'}}>(Online)</span>) : (<span>(Offline)</span>);
   
   const _playerInformation = () => {
     return (
@@ -121,7 +136,7 @@ function Private(props) {
           <p>Is playing latest update time: {lastWorkerReportTimestampDescription}</p>
           <hr/>
           <p>IP address: {ipAddressDescription}</p>
-          <p>IP address last update at: {ipLastUpdateAtDescription}</p>
+          <p>IP address last update at: {ipLastUpdateAtDescription}{' '}{workerOnlineDescription}</p>
           <hr/>
           <p>Global switch is ON: {globalSwitchDescription}</p>
           <div>
@@ -141,7 +156,6 @@ function Private(props) {
   };
 
   const _playHistory = () => {
-    // return "playhistory";
     return (
       <IsPlayingHistory isPlayingHistory={isPlayingHistory}/>
     );
@@ -168,6 +182,25 @@ function Private(props) {
         <hr/>
         <div>
           <AppBar position="relative" color="default">
+            <Toolbar>
+            <div style={{flex: 'inline'}}>
+              <Button aria-controls="simple-menu" aria-haspopup="true" onClick={_handleMenuBtnClick}>
+                &#9776;
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={() => {_handleMenuClose(null)}}
+              >
+                {tabsToDisplay.map((tabInfo, idx) => {
+                  return <MenuItem onClick={() => {_handleMenuClose(idx)}}>{tabInfo[0]}</MenuItem>
+                })}
+                
+              </Menu>
+            </div>
+            <div style={{flex: 'inline'}}>
             <Tabs value={displayTabIdx}
               onChange={_handleTabChange}
               variant="scrollable"
@@ -176,6 +209,8 @@ function Private(props) {
                 return <Tab label={tabInfo[0]}/>
               })}
             </Tabs>
+            </div>
+            </Toolbar>
           </AppBar>
         </div>
         <div>

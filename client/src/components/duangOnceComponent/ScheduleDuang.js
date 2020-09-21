@@ -76,7 +76,7 @@ function ScheduleDuang(props) {
 
   return (
     <div>
-      Schedule Duang
+      <h2>Schedule Duang</h2>
       <hr/>
       <div>
         <TextField 
@@ -87,7 +87,6 @@ function ScheduleDuang(props) {
           setDuangYear(evt.target.value);
         }}
         />
-
         <TextField 
           id="duang-month" 
         label="Month" 
@@ -96,7 +95,8 @@ function ScheduleDuang(props) {
           setDuangMonth(evt.target.value);
         }}
         />
-
+      </div>
+      <div>
         <TextField 
           id="duang-date" 
         label="Date" 
@@ -105,16 +105,16 @@ function ScheduleDuang(props) {
           setDuangDate(evt.target.value);
         }}
         />
-
         <TextField 
           id="duang-hour" 
-        label="Hour" 
+        label="Hour (24h)" 
         value={duangHour}
         onChange={(evt) => {
           setDuangHour(evt.target.value);
         }}
         />
-
+      </div>
+      <div>
         <TextField 
           id="duang-minute" 
         label="Minute" 
@@ -123,7 +123,6 @@ function ScheduleDuang(props) {
           setDuangMinute(evt.target.value);
         }}
         />
-
         <TextField 
           id="duang-second" 
         label="Second" 
@@ -132,7 +131,8 @@ function ScheduleDuang(props) {
           setDuangSecond(evt.target.value);
         }}
         />
-
+      </div>
+      <div>
         <Button 
           variant="contained"
           onClick={_handleScheduleDuang}>
