@@ -59,7 +59,7 @@ function ConfigHistoryCell(props) {
   }, [refreshHandle, configServices]);
 
   return (
-    <div>
+    <div style={{backgroundColor: (configHistory.pinned ? '#daedca' : 'white')}}>
       <pre>{JSON.stringify(JSON.parse(configHistory.workerReportedConfig), null, 2)}</pre>
       <ul>
         <li>

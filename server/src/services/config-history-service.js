@@ -5,7 +5,7 @@ module.exports = {
   addHistory: function(workerReported) {
     const numberOfRecordToKeep = 5;
 
-    return ConfigHistory.findOne({}).sort({created_at: -1}).exec().then((configHistory) => {
+    return ConfigHistory.findOne({workerReportedConfig: workerReported}).sort({created_at: -1}).exec().then((configHistory) => {
       if (configHistory && configHistory.workerReportedConfig === workerReported) {
         return null;
       } else {
@@ -43,7 +43,7 @@ module.exports = {
   },
 
   getAllHistory: function() {
-    return ConfigHistory.find({}).sort({created_at: -1}).exec().then((configHistories) => {
+    return ConfigHistory.find({}).sort([['pinned', -1], ['created_at', -1]]).exec().then((configHistories) => {
       return configHistories.map((configHistory) => {
         return {
           id: configHistory._id,
