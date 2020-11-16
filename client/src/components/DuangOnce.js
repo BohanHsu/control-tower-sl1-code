@@ -20,6 +20,7 @@ function DuangOnce(props) {
   const [duangRequestHistory, setDuangRequestHistory] = useState([]);
   const [rawServerConfigData, setRawServerConfigData] = useState(null);
   const [localMp3File, setLocalMp3File] = useState(DEFAULT);
+  const [showSchedulePanel, setShowSchedulePanel] = useState(false);
 
   const _refreshHistory = useCallback(() => {
     clearInterval(timerId);
@@ -89,6 +90,10 @@ function DuangOnce(props) {
     })();
   }, []);
 
+  const _setShowSchedulePanel = (shouldShow) => {
+    setShowSchedulePanel(shouldShow);
+  };
+
   return (
     <div>
       <hr/>
@@ -117,11 +122,22 @@ function DuangOnce(props) {
       >
         Request A Duang
       </Button>
+      {!showSchedulePanel &&
+      <Button onClick={() => {_setShowSchedulePanel(true);}}
+        variant="contained"
+      >
+        Show Schedule
+      </Button>
+      }
+      {showSchedulePanel &&
       <hr/>
+      }
+      {showSchedulePanel &&
       <ScheduleDuang
         duangRequestServices={duangRequestServices}
         refreshHistory={() => {_refreshHistory()}}
         localMp3FileGetter={localMp3FileGetter}/>
+      }
 
       <DuangHistory 
         duangRequestHistory={duangRequestHistory} 
