@@ -75,6 +75,21 @@ function DuangOnce(props) {
     setLocalMp3File(event.target.value);
   };
 
+  const _handlePickOneMp3File = () => {
+    if (rawServerConfigData) {
+      if (rawServerConfigData.workerReportedAvailableMp3Files) {
+        const len = rawServerConfigData.workerReportedAvailableMp3Files.length;
+        const idx = Math.floor(Math.random() * (len * 3 / 2)) % len;
+
+        _handleLocalMp3FileChange({
+          target: {
+            value: rawServerConfigData.workerReportedAvailableMp3Files[idx],
+          }
+        });
+      }
+    }
+  };
+
   const _deleteDuangHandle = _onDeleteADuang;
 
   useEffect(_refreshHistory, []);
@@ -116,18 +131,30 @@ function DuangOnce(props) {
         </FormControl>
       </div>
       <hr/>
-      <Button onClick={_onRequestADuang} 
-        color="primary"
-        variant="contained"
-      >
-        Request A Duang
-      </Button>
+      <div>
+        <Button onClick={_onRequestADuang} 
+          color="primary"
+          variant="contained"
+        >
+          Request A Duang
+        </Button>
+      </div>
+      <div>
+        <Button onClick={_handlePickOneMp3File} 
+          variant="contained"
+        >
+          Pick one for me
+        </Button>
+      </div>
       {!showSchedulePanel &&
-      <Button onClick={() => {_setShowSchedulePanel(true);}}
-        variant="contained"
-      >
-        Show Schedule
-      </Button>
+      <div>
+        <hr/>
+        <Button onClick={() => {_setShowSchedulePanel(true);}}
+          variant="contained"
+        >
+          Show Schedule
+        </Button>
+      </div>
       }
       {showSchedulePanel &&
       <hr/>
