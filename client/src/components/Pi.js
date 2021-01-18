@@ -57,6 +57,18 @@ function generateChartState(data, label) {
 }
 
 function renderChart(data, text) {
+  const dataSets = data.datasets[0].data;
+  let ticks = {
+    beginAtZero: true,
+  };
+
+  if (dataSets.length > 0) {
+    const suggestedMax = Math.max(...data.datasets[0].data) * 1.15;
+    ticks = {
+      ...ticks,
+      suggestedMax,
+    };
+  }
   return (
     <div>
     <Line
@@ -73,9 +85,7 @@ function renderChart(data, text) {
         },
         scales: {
           yAxes: [{
-            ticks: {
-              beginAtZero: true,
-            }
+            ticks,
           }]
         }
       }}
