@@ -21,16 +21,14 @@ const G_LEVEL2_BUMP_MODULER = 30;
 
 module.exports = {
   recordTemperature: function(temperatureString) {
-    console.log("xbh0");
     if (temperatureString.length == 0) {
-      console.log("xbh1");
       return;
     }
 
     const floatTemperature = parseFloat(temperatureString)
 
-    if (floatTemperature.toString() !== temperatureString) {
-      console.log("xbh2", floatTemperature, floatTemperature.toString(), temperatureString, floatTemperature.toString() !== temperatureString);
+    // this won't work when temperature is 34.0
+    if (false && floatTemperature.toString() !== temperatureString) {
       return;
     }
     
