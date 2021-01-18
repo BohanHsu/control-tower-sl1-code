@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import DashboardServices from '../../services/dashboardServices';
+
 const useStyles = makeStyles({
   table: {
   },
@@ -15,6 +17,23 @@ const useStyles = makeStyles({
 
 function IsPlayingHistory(props) {
   const classes = useStyles();
+
+  const dashboardServices = new DashboardServices(props.api);
+
+  const [isPlayingHistories, setIsPlayingHistories] = useState([]);
+
+  const _refreshPageWithRemoteValues = () => {
+    (async () => {
+      const resp = await dashboardServices.loadDashboardInfo();
+      if (resp && resp.data) {
+        setIsPlayingHistories(resp.data.isPlayingHistories);
+      }
+    })();
+  };
+
+  useEffect(() => {
+    _refreshPageWithRemoteValues();
+  }, []);
 
   return (
     <div>
@@ -29,8 +48,7 @@ function IsPlayingHistory(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.isPlayingHistory.map((history, idx) => {
-
+            {isPlayingHistories.map((history, idx) => {
               return (
                 <TableRow key={`is-playing-history-${idx}`}>
                   <TableCell component="th" scope="row">

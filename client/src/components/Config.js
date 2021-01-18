@@ -17,15 +17,13 @@ function Config(props) {
   const api = props.api;
   const configServices = new ConfigServices(api);
 
-  let timerId;
-
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyningFinishTime, setLastSyningFinishTime] = useState(null);
   const [rawServerConfigData, setRawServerConfigData] = useState(null);
   const [localConfigJSONStr, setLocalConfigJSONStr] = useState("");
 
   const _refreshHistory = useCallback(() => {
-    clearInterval(timerId);
+    console.log('refreshing info page');
     setIsSyncing(true);
     (async () => {
 
@@ -39,7 +37,7 @@ function Config(props) {
 
       return null;
     })();
-  }, [timerId]);
+  }, []);
 
   useEffect(_refreshHistory, []);
 

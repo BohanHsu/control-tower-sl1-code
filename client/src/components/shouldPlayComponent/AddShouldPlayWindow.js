@@ -29,32 +29,32 @@ function AddShouldPlayWindow(props) {
     setWarning("");
 
     if (!validateIsIntAndInRange(startHour, 0, 24)) {
-      setWarning("Wrong start hour");
+      setWarning("Wrong start hour (do NOT append 0 like 01, use 1)");
       return;
     }
 
     if (!validateIsIntAndInRange(endHour, 0, 24)) {
-      setWarning("Wrong end hour");
+      setWarning("Wrong end hour (do NOT append 0 like 01, use 1)");
       return;
     }
 
     if (!validateIsIntAndInRange(startMinute, 0, 60)) {
-      setWarning("Wrong start minute");
+      setWarning("Wrong start minute (do NOT append 0 like 01, use 1)");
       return;
     }
 
     if (!validateIsIntAndInRange(endMinute, 0, 60)) {
-      setWarning("Wrong end minute");
+      setWarning("Wrong end minute (do NOT append 0 like 01, use 1)");
       return;
     }
 
     if (!validateIsIntAndInRange(startSecond, 0, 60)) {
-      setWarning("Wrong start second");
+      setWarning("Wrong start second (do NOT append 0 like 01, use 1)");
       return;
     }
 
     if (!validateIsIntAndInRange(endSecond, 0, 60)) {
-      setWarning("Wrong end second");
+      setWarning("Wrong end second (do NOT append 0 like 01, use 1)");
       return;
     }
 
@@ -85,7 +85,7 @@ function AddShouldPlayWindow(props) {
   return (
     <div>
       <div>
-        {warning}
+        <p style={{color:'red'}}><em>{warning}</em></p>
       </div>
       <div>
         Start:
