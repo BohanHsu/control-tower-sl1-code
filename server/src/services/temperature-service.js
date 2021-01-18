@@ -148,11 +148,13 @@ function cleanQueueAndCalculateNextCursorAndShouldBump(aggregatedLevel, numberOf
 
     if (gShouldBump) {
       let temperatureSum = 0;
-      temperatureObjs.forEach((obj) => {
-        temperatureSum += obj.temperature;
+      temperatureObjs.forEach((obj, idx) => {
+        if (idx >= Math.min(numberOfRecordToKeep, temperatureObjs.length) - bumpModuler) {
+          temperatureSum += obj.temperature;
+        }
       });
 
-      gAvgTemperature = temperatureSum * 1.0 / temperatureObjs.length;
+      gAvgTemperature = temperatureSum * 1.0 / bumpModuler;
       gAvgTemperature = Math.round(gAvgTemperature * 10) / 10;
     }
     
