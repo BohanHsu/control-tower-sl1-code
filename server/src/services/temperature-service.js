@@ -102,8 +102,30 @@ module.exports = {
   },
 
   getTemperature: function() {
-    return Temperature.find({}).then((temperatureObjs) => {
-      return temperatureObjs;
+    return Temperature.find({}).sort({recordTime: 1}).then((temperatureObjs) => {
+
+      const level0 = [];
+      let level0Idx = 0;
+      const level1 = [];
+      const level2 = [];
+
+      temperatureObjs.forEach((obj) => {
+        if (obj.aggregatedLevel === 0) {
+          if (level0Idx % 20 === 0) {
+            level0.push(obj.temperature)
+          }
+          level0Idx += 1;
+        } else if (obj.aggregatedLevel === 1) {
+            level1.push(obj.temperature)
+        } else if (obj.aggregatedLevel === 2) {
+            level2.push(obj.temperature)
+        }
+      })
+      return {
+        level0,
+        level1,
+        level2,
+      };
     });
   },
 };
