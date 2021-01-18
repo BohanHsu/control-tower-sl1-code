@@ -7,6 +7,7 @@ import IsPlayingHistory from './isPlaying/IsPlayingHistory';
 import ShouldPlay from './ShouldPlay';
 import DuangOnce from './DuangOnce';
 import Config from './Config';
+import Pi from './Pi';
 
 function Private(props) {
   const loggedInChangedCallback = props.onLoggedInChanged;
@@ -168,6 +169,7 @@ function Private(props) {
     ['Config', (() => <Config api={api}/>)()],
     ['Should Play', (() => <ShouldPlay remoteShouldPlay={shouldPlay} remoteUseShouldPlayWindow={useShouldPlayWindow} dashboardServices={dashboardServices} refreshDashbordDisplay={_refreshDisplayValue} api={api}/>)()],
     ['Play History', (() => {return _playHistory()})()],
+    ['Pi', (() => {return <Pi api={api}/>})()]
   ];
   // End Master Page UI
 
