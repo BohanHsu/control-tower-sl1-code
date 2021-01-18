@@ -55,7 +55,7 @@ function Info(props) {
       setLastSyningFinishTime(new Date().getTime());
 
       timerId = setInterval(() => {
-        console.log('refreshing page');
+        console.log('refreshing info page');
         _refreshDisplayValue();
       }, 5000);
 
@@ -64,6 +64,13 @@ function Info(props) {
   }, [timerId]);
 
   useEffect(_refreshDisplayValue, []);
+
+  useEffect(() => {
+    return () => {
+      console.log("cleaned up info");
+      clearInterval(timerId);
+    };
+  }, [timerId]);
 
   const _onGlobalSwitchClick = useCallback((val) => {
     const globalSwitchIsOn = val.target.checked

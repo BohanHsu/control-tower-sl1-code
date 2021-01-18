@@ -37,7 +37,7 @@ function DuangOnce(props) {
       timerId = setInterval(() => {
         console.log('refreshing duang request history');
         _refreshHistory();
-      }, 5000);
+      }, 2500);
 
       return null;
     })();
@@ -93,6 +93,13 @@ function DuangOnce(props) {
   const _deleteDuangHandle = _onDeleteADuang;
 
   useEffect(_refreshHistory, []);
+
+  useEffect(() => {
+    return () => {
+      console.log("cleaned up duang request page");
+      clearInterval(timerId);
+    };
+  }, [timerId]);
 
   useEffect(() => {
     (async () => {
