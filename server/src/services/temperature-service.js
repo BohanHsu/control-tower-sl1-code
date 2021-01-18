@@ -30,7 +30,7 @@ module.exports = {
     const floatTemperature = parseFloat(temperatureString)
 
     if (floatTemperature.toString() !== temperatureString) {
-      console.log("xbh2");
+      console.log("xbh2", floatTemperature, floatTemperature.toString(), temperatureString, floatTemperature.toString() !== temperatureString);
       return;
     }
     
