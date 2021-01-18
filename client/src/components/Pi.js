@@ -64,13 +64,20 @@ function renderChart(data, text) {
       options={{
         title:{
           display:true,
-            text,
-            fontSize:20
+          text,
+          fontSize:20
         },
-          legend:{
-            display:true,
-              position:'right'
-          }
+        legend:{
+          display:true,
+          position:'right'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+            }
+          }]
+        }
       }}
     />
     </div>
