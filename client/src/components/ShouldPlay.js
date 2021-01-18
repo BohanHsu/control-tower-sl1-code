@@ -7,29 +7,41 @@ import ShouldPlayWindowServices from '../services/shouldPlayWindowServices';
 
 
 function ShouldPlay(props) {
-  const remoteShouldPlay = props.remoteShouldPlay;
-  const remoteUseShouldPlayWindow = props.remoteUseShouldPlayWindow;
-  const dashboardServices = props.dashboardServices;
-  const refreshDashbordDisplay = props.refreshDashbordDisplay;
-
   const api = props.api;
+  const dashboardServices = new DashboardServices(api);
   const shouldPlayWindowServices = new ShouldPlayWindowServices(api);
 
   const [localShouldPlay, setLocalShouldPlay] = useState(false);
   const [localUseShouldPlayWindow, setLocalUseShouldPlayWindow] = useState(false);
 
-  // Sync props with localShouldPlay
+  const [remoteShouldPlay, setRemoteShouldPlay] = useState(null);
+  const [remoteUseShouldPlayWindow, setRemoteUseShouldPlayWindow] = useState(null);
+
+  const _refreshPageWithRemoteValues = () => {
+    setRemoteShouldPlay(null);
+    setRemoteUseShouldPlayWindow(null);
+    (async () => {
+      const resp = await dashboardServices.loadDashboardInfo();
+      if (resp && resp.data) {
+        setLocalShouldPlay(resp.data.shouldPlay.shouldPlay || false); // React consider null initial value as uncontrolled input
+        setLocalUseShouldPlayWindow(resp.data.shouldPlay.useShouldPlayWindow || false); // React consider null initial value as uncontrolled input
+
+        setRemoteShouldPlay(resp.data.shouldPlay.shouldPlay);
+        setRemoteUseShouldPlayWindow(resp.data.shouldPlay.useShouldPlayWindow);
+      }
+    })();
+  };
+
   useEffect(() => {
-    setLocalShouldPlay(props.remoteShouldPlay || false); // React consider null initial value as uncontrolled input
-    setLocalUseShouldPlayWindow(props.remoteUseShouldPlayWindow || false);
-  }, [props]);
+    _refreshPageWithRemoteValues();
+  }, []);
 
   const _onShouldPlayClick = useCallback((val) => {
     const newShouldPlay = val.target.checked
     setLocalShouldPlay(newShouldPlay);
     (async () => {
       await dashboardServices.updateShouldPlay(newShouldPlay);
-      refreshDashbordDisplay();
+      _refreshPageWithRemoteValues();
     })();
   }, []);;
 
@@ -38,8 +50,7 @@ function ShouldPlay(props) {
     setLocalUseShouldPlayWindow(newUseShouldPlayWindow);
     (async () => {
       await shouldPlayWindowServices.updateUseShouldPlayWindow(newUseShouldPlayWindow);
-
-      refreshDashbordDisplay();
+      _refreshPageWithRemoteValues();
     })();
   }, []);
 
