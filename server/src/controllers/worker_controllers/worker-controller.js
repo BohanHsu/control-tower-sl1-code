@@ -8,6 +8,7 @@ const duangRequestService = require('../../services/duang-request-service');
 const ipService = require('../../services/ip-service');
 const configService = require('../../services/config-service');
 const configHistoryService = require('../../services/config-history-service');
+const temperatureService = require('../../services/temperature-service');
 
 const app = express();
 
@@ -39,6 +40,11 @@ module.exports = function() {
     }).then(() => {
       if (req && req.body && req.body.ip) {
         return ipService.updateIp(req.body.ip);
+      }
+      return null;
+    }).then(() => {
+      if (req && req.body && req.body.temperature) {
+        return temperatureService.recordTemperature(req.body.temperature);
       }
       return null;
       // End handle work reports
