@@ -64,15 +64,15 @@ function generateChartState(data, label) {
 
 function renderChart(data, text, refreshHandle) {
   const dataSets = data.datasets[0].data;
-  let ticks = {
-    beginAtZero: true,
-  };
+  let ticks = {};
 
   if (dataSets.length > 0) {
     const suggestedMax = Math.max(...data.datasets[0].data) * 1.15;
+    const suggestedMin = Math.min(...data.datasets[0].data) / 2.0;
     ticks = {
       ...ticks,
       suggestedMax,
+      suggestedMin,
     };
   }
   return (
