@@ -17,7 +17,7 @@ const G_LEVEL2_BUMP_MODULER = 30;
 // const G_LEVEL1_BUMP_MODULER = 2;
 // 
 // const G_LEVEL2_NUMBER_OF_RECORD = 3;
-// const G_LEVEL2_BUMP_MODULER = 10;
+// const G_LEVEL2_BUMP_MODULER = 3;
 
 module.exports = {
   recordTemperature: function(temperatureString) {
@@ -121,7 +121,8 @@ module.exports = {
         } else if (obj.aggregatedLevel === 2) {
             level2.push(obj.temperature)
         }
-      })
+      });
+
       return {
         level0,
         level1,
@@ -148,30 +149,53 @@ function cleanQueueAndCalculateNextCursorAndShouldBump(aggregatedLevel, numberOf
 
     if (gShouldBump) {
       let temperatureSum = 0;
-      temperatureObjs.forEach((obj, idx) => {
-        if (idx >= Math.min(numberOfRecordToKeep, temperatureObjs.length) - bumpModuler) {
-          temperatureSum += obj.temperature;
-        }
-      });
+      let count = 0;
 
-      gAvgTemperature = temperatureSum * 1.0 / bumpModuler;
+      for (let i = temperatureObjs.length - bumpModuler; i < temperatureObjs.length; i++) {
+        if (i >= 0 && i < temperatureObjs.length) {
+          temperatureSum += temperatureObjs[i].temperature;
+          count += 1;
+        }
+      }
+
+      gAvgTemperature = temperatureSum * 1.0 / count;
       gAvgTemperature = Math.round(gAvgTemperature * 10) / 10;
     }
     
-    if (temperatureObjs.length === numberOfRecordToKeep) {
-      return Temperature.findByIdAndDelete(temperatureObjs[0]._id).then(() => {
-        return {
-          nextCursor: gNextCurosr,
-          shouldBump: gShouldBump,
-          avgTemperature: gAvgTemperature,
-        };
+    return removeOutdatedRecords(temperatureObjs, numberOfRecordToKeep).then(() => {
+      const result = {
+        nextCursor: gNextCurosr,
+        shouldBump: gShouldBump,
+        avgTemperature: gAvgTemperature,
+      };
+
+      return result;
+    });
+  });
+}
+
+function removeOutdatedRecords(temperatureObjs, numberOfRecordToKeep) {
+  const toRemoveQueue = [];
+  let i = 0;
+
+  while (temperatureObjs.length - toRemoveQueue.length >= numberOfRecordToKeep) {
+    toRemoveQueue.push(temperatureObjs[i]);
+    i += 1;
+  }
+
+  const cleanQueue = function() {
+    if (toRemoveQueue.length === 0) {
+      return new Promise((resolve, reject) => {
+        resolve();
       });
     }
+    const firstObj = toRemoveQueue.pop();
+    return Temperature.findByIdAndDelete(firstObj._id).then(() => {
+      return cleanQueue();
+    });
+  };
 
-    return {
-      nextCursor: gNextCurosr,
-      shouldBump: gShouldBump,
-      avgTemperature: gAvgTemperature,
-    };
+  return cleanQueue().then(() => {
+    return true;
   });
 }
