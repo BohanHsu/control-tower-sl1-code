@@ -68,7 +68,7 @@ function renderChart(data, text, refreshHandle) {
 
   if (dataSets.length > 0) {
     const suggestedMax = Math.max(...data.datasets[0].data) * 1.15;
-    const suggestedMin = Math.min(...data.datasets[0].data) / 2.0;
+    const suggestedMin = Math.min(...data.datasets[0].data) / 1.5;
     ticks = {
       ...ticks,
       suggestedMax,
