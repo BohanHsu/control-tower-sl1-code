@@ -1,5 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react';
 
+import { Button } from '@material-ui/core';
+
 import PiServices from '../services/piServices';
 
 import {Line} from 'react-chartjs-2';
@@ -29,12 +31,12 @@ function Pi(props) {
   return (
     <div>
       <h1>Last Hour</h1>
-        {level0TemperatureChart && renderChart(level0TemperatureChart, "60 mins")}
+        {level0TemperatureChart && renderChart(level0TemperatureChart, "60 mins", _refreshTemperatures)}
       <h1>Past 3 Days</h1>
-        {level1TemperatureChart && renderChart(level1TemperatureChart, "72 hours")}
+        {level1TemperatureChart && renderChart(level1TemperatureChart, "72 hours", _refreshTemperatures)}
 
       <h1>Past 30 Days</h1>
-        {level2TemperatureChart && renderChart(level2TemperatureChart, "30 days")}
+        {level2TemperatureChart && renderChart(level2TemperatureChart, "30 days", _refreshTemperatures)}
     </div>
   );
 }
@@ -60,7 +62,7 @@ function generateChartState(data, label) {
   };
 }
 
-function renderChart(data, text) {
+function renderChart(data, text, refreshHandle) {
   const dataSets = data.datasets[0].data;
   let ticks = {
     beginAtZero: true,
@@ -75,25 +77,34 @@ function renderChart(data, text) {
   }
   return (
     <div>
-    <Line
-      data={data}
-      options={{
-        title:{
-          display:true,
-          text,
-          fontSize:20
-        },
-        legend:{
-          display:true,
-          position:'right'
-        },
-        scales: {
-          yAxes: [{
-            ticks,
-          }]
-        }
-      }}
-    />
+      <div>
+        <Button
+          variant="contained"
+          onClick={refreshHandle}>
+          Refresh
+        </Button>
+      </div>
+      <div>
+        <Line
+          data={data}
+          options={{
+            title:{
+              display:true,
+              text,
+              fontSize:20
+            },
+            legend:{
+              display:true,
+              position:'right'
+            },
+            scales: {
+              yAxes: [{
+                ticks,
+              }]
+            }
+          }}
+        />
+      </div>
     </div>
   )
 }
