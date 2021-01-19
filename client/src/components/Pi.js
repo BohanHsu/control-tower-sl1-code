@@ -40,8 +40,12 @@ function Pi(props) {
 }
 
 function generateChartState(data, label) {
+  const labels = [];
+  for (let i = 1; i <= data.length; i++) {
+    labels.push(i.toString());
+  }
   return {
-    labels: (new Array(data.length).fill(" ")),
+    labels,
     datasets: [
       {
         label,
