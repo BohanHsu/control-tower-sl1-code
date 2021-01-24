@@ -60,15 +60,8 @@ function Private(props) {
     <Container>
       <div>
         <div>
-          <button onClick={_handleLogout}>Logout</button>
-          <button onClick={_handleManualRefresh}>Refresh</button>
-        </div>
-
-        <hr/>
-        <div>
           <AppBar position="relative" color="default">
-            <Toolbar>
-            <div style={{flex: 'inline'}}>
+            <div style={{display: 'inline'}}>
               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={_handleMenuBtnClick}>
                 &#9776;
               </Button>
@@ -82,20 +75,24 @@ function Private(props) {
                 {tabsToDisplay.map((tabInfo, idx) => {
                   return <MenuItem onClick={() => {_handleMenuClose(idx)}}>{tabInfo[0]}</MenuItem>
                 })}
-                
               </Menu>
+              <div style={{float: 'right'}}>
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={_handleLogout}>
+                  Logout
+                </Button>
+              </div>
             </div>
-            <div style={{flex: 'inline'}}>
-            <Tabs value={displayTabIdx}
-              onChange={_handleTabChange}
-              variant="scrollable"
-              scrollButtons="auto">
-              {tabsToDisplay.map((tabInfo) => {
-                return <Tab label={tabInfo[0]}/>
-              })}
-            </Tabs>
+
+            <div style={{display: 'flex'}}>
+              <Tabs value={displayTabIdx}
+                onChange={_handleTabChange}
+                variant="scrollable"
+                scrollButtons="auto">
+                {tabsToDisplay.map((tabInfo) => {
+                  return <Tab label={tabInfo[0]}/>
+                })}
+              </Tabs>
             </div>
-            </Toolbar>
           </AppBar>
         </div>
         <div>
