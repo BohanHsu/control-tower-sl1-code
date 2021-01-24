@@ -49,10 +49,10 @@ function Private(props) {
   const tabsToDisplay = [
     ['Info', (() => <Info api={api}/>)()],
     ['Duang', (() => <DuangOnce api={api}/>)()],
+    ['Pi', (() => {return <Pi api={api}/>})()],
     ['Config', (() => <Config api={api}/>)()],
     ['Should Play', (() => <ShouldPlay api={api}/>)()],
     ['Play History', (() => <IsPlayingHistory api={api}/>)()],
-    ['Pi', (() => {return <Pi api={api}/>})()]
   ];
   // End Master Page UI
 
