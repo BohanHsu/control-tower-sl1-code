@@ -9,6 +9,7 @@ const ipService = require('../../services/ip-service');
 const configService = require('../../services/config-service');
 const configHistoryService = require('../../services/config-history-service');
 const temperatureService = require('../../services/temperature-service');
+const oneTimeCommandService = require('../../services/one-time-command-service');
 
 const app = express();
 
@@ -18,6 +19,7 @@ module.exports = function() {
     let gShouldPlayResp = false;
     let gUseShouldPlayWindow = false;
     let gDuang = null;
+    let gCommands = null;
 
     const isPlaying = !!(req.body.isPlaying);
     const requireConfig = !!(req.body.requireConfig);
@@ -79,6 +81,12 @@ module.exports = function() {
     }).then((duang) => {
       gDuang = duang;
 
+      return oneTimeCommandService.findAndFlipToSendCommands();
+    }).then((commands) => {
+      if (commands !== null && commands.length > 0) {
+        gCommands = commands;
+      }
+
       return configService.getConfig().then((configObj) => {
         if (configObj.sendToWorker || requireConfig) {
           return configService.resetSendToWorkerFlagAndReturnOverrideConfig();
@@ -102,6 +110,10 @@ module.exports = function() {
 
       if (overrideConfig) {
         response.config = overrideConfig;
+      }
+
+      if (gCommands) {
+        response.commands = gCommands;
       }
 
       res.json(response);

@@ -6,6 +6,8 @@ import PiServices from '../services/piServices';
 
 import {Line} from 'react-chartjs-2';
 
+import ShutdownPi from './piComponent/ShutdownPi';
+
 function Pi(props) {
   const api = props.api;
   const piServices = new PiServices(api);
@@ -30,14 +32,17 @@ function Pi(props) {
 
   return (
     <div>
+      <div>
+        <ShutdownPi api={api}/>
+      </div>
       <h1>Last Hour</h1>
-        {level0TemperatureChart && renderChart(level0TemperatureChart, "60 mins", _refreshTemperatures)}
+      {level0TemperatureChart && renderChart(level0TemperatureChart, "60 mins", _refreshTemperatures)}
       <h1>Past 3 Days</h1>
-        {level1TemperatureChart && renderChart(level1TemperatureChart, "72 hours", _refreshTemperatures)}
-
+      {level1TemperatureChart && renderChart(level1TemperatureChart, "72 hours", _refreshTemperatures)}
       <h1>Past 30 Days</h1>
-        {level2TemperatureChart && renderChart(level2TemperatureChart, "30 days", _refreshTemperatures)}
+      {level2TemperatureChart && renderChart(level2TemperatureChart, "30 days", _refreshTemperatures)}
     </div>
+
   );
 }
 
