@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import { AppBar, Container, Tab, Tabs, Toolbar, Button, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Container, Tab, Tabs, Button, Menu, MenuItem } from '@material-ui/core';
 
 import AuthServices from '../services/authServices';
 
@@ -49,10 +49,10 @@ function Private(props) {
   const tabsToDisplay = [
     ['Info', (() => <Info api={api}/>)()],
     ['Duang', (() => <DuangOnce api={api}/>)()],
+    ['Pi', (() => {return <Pi api={api}/>})()],
     ['Config', (() => <Config api={api}/>)()],
     ['Should Play', (() => <ShouldPlay api={api}/>)()],
     ['Play History', (() => <IsPlayingHistory api={api}/>)()],
-    ['Pi', (() => {return <Pi api={api}/>})()]
   ];
   // End Master Page UI
 
@@ -60,15 +60,8 @@ function Private(props) {
     <Container>
       <div>
         <div>
-          <button onClick={_handleLogout}>Logout</button>
-          <button onClick={_handleManualRefresh}>Refresh</button>
-        </div>
-
-        <hr/>
-        <div>
           <AppBar position="relative" color="default">
-            <Toolbar>
-            <div style={{flex: 'inline'}}>
+            <div style={{display: 'inline'}}>
               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={_handleMenuBtnClick}>
                 &#9776;
               </Button>
@@ -82,20 +75,24 @@ function Private(props) {
                 {tabsToDisplay.map((tabInfo, idx) => {
                   return <MenuItem onClick={() => {_handleMenuClose(idx)}}>{tabInfo[0]}</MenuItem>
                 })}
-                
               </Menu>
+              <div style={{float: 'right'}}>
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={_handleLogout}>
+                  Logout
+                </Button>
+              </div>
             </div>
-            <div style={{flex: 'inline'}}>
-            <Tabs value={displayTabIdx}
-              onChange={_handleTabChange}
-              variant="scrollable"
-              scrollButtons="auto">
-              {tabsToDisplay.map((tabInfo) => {
-                return <Tab label={tabInfo[0]}/>
-              })}
-            </Tabs>
+
+            <div style={{display: 'flex'}}>
+              <Tabs value={displayTabIdx}
+                onChange={_handleTabChange}
+                variant="scrollable"
+                scrollButtons="auto">
+                {tabsToDisplay.map((tabInfo) => {
+                  return <Tab label={tabInfo[0]}/>
+                })}
+              </Tabs>
             </div>
-            </Toolbar>
           </AppBar>
         </div>
         <div>
