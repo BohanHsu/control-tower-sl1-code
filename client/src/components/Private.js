@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import { AppBar, Container, Tab, Tabs, Toolbar, Button, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Container, Tab, Tabs, Button, Menu, MenuItem } from '@material-ui/core';
 
 import AuthServices from '../services/authServices';
 

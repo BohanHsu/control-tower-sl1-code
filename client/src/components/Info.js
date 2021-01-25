@@ -89,7 +89,7 @@ function Info(props) {
   const ipAddressDescription = ipAddress ? ipAddress : "Not Available";
   const ipLastUpdateAtDescription = ipLastUpdateAt ? new Date(ipLastUpdateAt).toLocaleString() : "Not Available";
   const timeSinceWorkerUpdatedIp = (Date.now() - new Date(ipLastUpdateAt).getTime()) / 1000;
-  const workerOnlineDescription = timeSinceWorkerUpdatedIp < 10 ? (<span style={{color:'green'}}>(Online)</span>) : (<span>(Offline)</span>);
+  const workerOnlineDescription = timeSinceWorkerUpdatedIp < 4 ? (<span style={{color:'green'}}>(Online)</span>) : (<span>(Offline)</span>);
 
   return (
     <div>
