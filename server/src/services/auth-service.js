@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const userService = require('./user-service');
 
 module.exports = {
-  getLoginToken: (motto) => {
+  getLoginToken: (motto, delayExpire=false) => {
     return userService.verifyUserByIdentification(motto)
     .then((verified) => {
       if (verified) {
-        const token = jwt.sign({motto}, 'supersecret',{expiresIn: 600});
+        const expiresIn = delayExpire ? 864000 : 600;
+        const token = jwt.sign({motto, delayExpire}, 'supersecret', {expiresIn});
         return token;
       }
 

@@ -6,6 +6,7 @@ function Public(props) {
   const loggedInChangedCallback = props.onLoggedInChanged;
 
   const [motto, setMotto] = useState("");
+  const [showHint, setShowHint] = useState(false);
 
   const services = new AuthServices();
 
@@ -15,7 +16,7 @@ function Public(props) {
 
   const _handleBtnClick = () => {
     (async () => {
-      const response = await services.login(motto);
+      const response = await services.login(motto, showHint);
       if (response && loggedInChangedCallback) {
         loggedInChangedCallback();
       }
@@ -36,6 +37,11 @@ function Public(props) {
     }
   };
 
+  const _onShowHintClicked = (val) => {
+    const newShowHint = val.target.checked;
+    setShowHint(newShowHint);
+  };
+
   useEffect(() => {
     document.addEventListener("keydown", _handleKeyDown);
   }, [motto]);
@@ -52,6 +58,17 @@ function Public(props) {
       <div>Flight Number from JFK to LGA?</div>
       <div><label><input value={motto} onChange={handleMottoChange} type="text"/></label></div>
       <div><button onClick={_handleBtnClick}>Answer!</button></div>
+      <hr/>
+      <label>
+        <input 
+          type='checkbox' 
+          checked={showHint}
+          onChange={_onShowHintClicked}/>
+        Show me a hint!
+      </label>
+      <div>
+        {showHint ? (<span>Are you f**king kidding me?</span>) : (<span></span>)}
+      </div>
     </div>
   );
 }

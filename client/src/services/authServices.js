@@ -1,7 +1,8 @@
 class AuthServices {
-  async login(motto) {
+  async login(motto, showHint=false) {
     const data = {
-      motto
+      motto,
+      showHint,
     };
 
     const response = await fetch('/api/ui/auth/login', {

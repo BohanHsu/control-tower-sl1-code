@@ -6,8 +6,9 @@ module.exports = function(req, res, next) {
   jwt.verify(token, 'supersecret', function(err, decoded){
     if(!err){
       const motto = decoded.motto;
+      const delayExpire = !!decoded.delayExpire;
 
-      authService.getLoginToken(motto).then((newToken) => {
+      authService.getLoginToken(motto, delayExpire).then((newToken) => {
         if (newToken) {
           if (res.locals) {
             res.locals.newToken = newToken;
