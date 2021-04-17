@@ -18,6 +18,12 @@ class DuangRequestServices {
     return this._api.post('/api/ui/operations/requestDuang', data);
   }
 
+  async requestDuangs(duangSchedule=[]) {
+    let data = {schedules: duangSchedule};
+
+    return this._api.post('/api/ui/operations/requestDuangs', data);
+  }
+
   async cancelDuang(requestId) {
     return this._api.post('/api/ui/operations/cancelDuang', {requestId});
   }

@@ -29,7 +29,7 @@ function ScheduleDuang(props) {
       return;
     }
 
-    if (isNaN(parsedDuangYear) || parsedDuangMonth < 0 || parsedDuangMonth > 12) {
+    if (isNaN(parsedDuangMonth) || parsedDuangMonth < 0 || parsedDuangMonth > 12) {
       setWarningMessage("Month wrong");
       return;
     }
@@ -134,6 +134,7 @@ function ScheduleDuang(props) {
       </div>
       <div>
         <Button 
+          color="primary"
           variant="contained"
           onClick={_handleScheduleDuang}>
           Schedule Duang

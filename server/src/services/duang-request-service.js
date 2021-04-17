@@ -3,60 +3,81 @@ const mongoose = require('mongoose');
 const DuangRequest = require('../models/duang-request-model');
 const globalSwitchService = require('./global-switch-service');
 
-module.exports = {
-  requestDuang: function(scheduleTimeUTCDate = null, optionalAudioFilePath = null) {
-    const numberOfRecordToKeep = 100;
+const requestDuang = function(scheduleTimeUTCDate = null, optionalAudioFilePath = null) {
+  const numberOfRecordToKeep = 100;
 
-    let gDuangRequestObj = null
-    let newDuang = {
-      requestedAt: new Date(),
-      currentState: 'notHandleYet',
-    };
+  let gDuangRequestObj = null
+  let newDuang = {
+    requestedAt: new Date(),
+    currentState: 'notHandleYet',
+  };
 
-    if (scheduleTimeUTCDate) {
-      newDuang.scheduleDuangTime = scheduleTimeUTCDate;
-    }
+  if (scheduleTimeUTCDate) {
+    newDuang.scheduleDuangTime = scheduleTimeUTCDate;
+  }
 
-    if (optionalAudioFilePath) {
-      newDuang.optionalAudioFilePath = optionalAudioFilePath;
-    }
+  if (optionalAudioFilePath) {
+    newDuang.optionalAudioFilePath = optionalAudioFilePath;
+  }
 
-    return DuangRequest.create(newDuang).then((duangRequestObj) => {
-      gDuangRequestObj = duangRequestObj;
+  return DuangRequest.create(newDuang).then((duangRequestObj) => {
+    gDuangRequestObj = duangRequestObj;
 
-      return DuangRequest.find({}).sort({requestedAt: 1}).exec();
-    }).then((duangRequestObjs) => {
-      if (duangRequestObjs.length > numberOfRecordToKeep) {
-        // Clean closed duang requests
-        const numToRemove = duangRequestObjs.length - numberOfRecordToKeep;
-        let toRemoveQueue = [];
+    return DuangRequest.find({}).sort({requestedAt: 1}).exec();
+  }).then((duangRequestObjs) => {
+    if (duangRequestObjs.length > numberOfRecordToKeep) {
+      // Clean closed duang requests
+      const numToRemove = duangRequestObjs.length - numberOfRecordToKeep;
+      let toRemoveQueue = [];
 
-        duangRequestObjs.forEach((obj) => {
-          if (obj.requestClosedAt) {
-            if (toRemoveQueue.length < numToRemove) {
-              toRemoveQueue.push(obj);
-            }
+      duangRequestObjs.forEach((obj) => {
+        if (obj.requestClosedAt) {
+          if (toRemoveQueue.length < numToRemove) {
+            toRemoveQueue.push(obj);
           }
+        }
+      })
+
+      cleanQueueFunc = function() {
+        if (toRemoveQueue.length === 0) {
+          return true;
+        }
+
+        const firstObj = toRemoveQueue.pop();
+        return DuangRequest.findByIdAndDelete(firstObj._id).then((a) => {
+          return cleanQueueFunc();
         })
+      };
 
-        cleanQueueFunc = function() {
-          if (toRemoveQueue.length === 0) {
-            return true;
-          }
+      return cleanQueueFunc().then(() => {
+        return gDuangRequestObj;
+      });
+    }
 
-          const firstObj = toRemoveQueue.pop();
-          return DuangRequest.findByIdAndDelete(firstObj._id).then((a) => {
-            return cleanQueueFunc();
-          })
-        };
+    return gDuangRequestObj;
+  });
+};
 
-        return cleanQueueFunc().then(() => {
-          return gDuangRequestObj;
+module.exports = {
+  requestDuang: requestDuang,
+
+  requestDuangs: function(duangRequests) {
+    const requestDuangsHelper = function(idx) {
+      if (idx >= duangRequests.length) {
+        return new Promise((resolve, reject) => {
+          resolve(true);
         });
       }
 
-      return gDuangRequestObj;
-    });
+      const scheduleTimeUTCDate = duangRequests[idx][0];
+      const optionalAudioFilePath = duangRequests[idx][1];
+
+      return requestDuang(scheduleTimeUTCDate, optionalAudioFilePath).then(() => {
+        return requestDuangsHelper(idx + 1);
+      });
+    };
+
+    return requestDuangsHelper(0);
   },
 
   cancelDuang: function(requestId) {
