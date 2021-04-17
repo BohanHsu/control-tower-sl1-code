@@ -2,6 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import DuangRequestServices from '../services/duangRequestServices';
 import DuangHistory from './duangOnceComponent/DuangHistory';
 import ScheduleDuang from './duangOnceComponent/ScheduleDuang';
+import BatchDuang from './duangOnceComponent/BatchDuang';
 import ConfigServices from '../services/configServices';
 
 import { Button, Select, FormControl, MenuItem, InputLabel } from '@material-ui/core';
@@ -20,7 +21,7 @@ function DuangOnce(props) {
   const [duangRequestHistory, setDuangRequestHistory] = useState([]);
   const [rawServerConfigData, setRawServerConfigData] = useState(null);
   const [localMp3File, setLocalMp3File] = useState(DEFAULT);
-  const [showSchedulePanel, setShowSchedulePanel] = useState(false);
+  const [showPanelIdx, setShowPanelIdx] = useState(0);
 
   const _refreshHistory = useCallback(() => {
     clearInterval(timerId);
@@ -112,65 +113,90 @@ function DuangOnce(props) {
     })();
   }, []);
 
-  const _setShowSchedulePanel = (shouldShow) => {
-    setShowSchedulePanel(shouldShow);
+  const _setShowPanelIdx = (idx) => {
+    setShowPanelIdx(idx);
   };
 
   return (
     <div>
-      <hr/>
-      <div>
-        Select optional audio file:&nbsp;
-      </div>
-      <div>
-        <FormControl>
-          <Select
-            value={localMp3File}
-            onChange={_handleLocalMp3FileChange}
-          >
-            <MenuItem value={DEFAULT}>{DEFAULT}</MenuItem>
-            {rawServerConfigData && rawServerConfigData.workerReportedAvailableMp3Files.map((mp3File, idx) => {
-              return (
-                <MenuItem value={mp3File}>{mp3File}</MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-      </div>
-      <hr/>
-      <div>
-        <Button onClick={_onRequestADuang} 
-          color="primary"
-          variant="contained"
-        >
-          Request A Duang
-        </Button>
-      </div>
-      <div>
-        <Button onClick={_handlePickOneMp3File} 
-          variant="contained"
-        >
-          Pick one for me
-        </Button>
-      </div>
-      {!showSchedulePanel &&
       <div>
         <hr/>
-        <Button onClick={() => {_setShowSchedulePanel(true);}}
-          variant="contained"
-        >
-          Show Schedule
-        </Button>
+        {showPanelIdx != 0 &&
+            <Button onClick={() => {_setShowPanelIdx(0);}}
+              variant="contained"
+            >
+              Show Immediate Duang
+            </Button>
+        }
+        {showPanelIdx != 1 &&
+          <Button onClick={() => {_setShowPanelIdx(1);}}
+            variant="contained"
+          >
+            Show Schedule
+          </Button>
+        }
+        {showPanelIdx != 2 &&
+          <Button onClick={() => {_setShowPanelIdx(2);}}
+            variant="contained"
+          >
+            Show Batch
+          </Button>
+        }
+
       </div>
-      }
-      {showSchedulePanel &&
       <hr/>
+      <div>
+        <div>
+          Select optional audio file:&nbsp;
+        </div>
+        <div>
+          <FormControl>
+            <Select
+              value={localMp3File}
+              onChange={_handleLocalMp3FileChange}
+            >
+              <MenuItem value={DEFAULT}>{DEFAULT}</MenuItem>
+              {rawServerConfigData && rawServerConfigData.workerReportedAvailableMp3Files.map((mp3File, idx) => {
+                return (
+                  <MenuItem value={mp3File}>{mp3File}</MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </div>
+        <hr/>
+        {showPanelIdx == 0 &&
+          <div>
+            <Button onClick={_onRequestADuang} 
+              color="primary"
+              variant="contained"
+            >
+              Request A Duang
+            </Button>
+          </div>
+        }
+        <div>
+          <Button onClick={_handlePickOneMp3File} 
+            variant="contained"
+          >
+            Pick one for me
+          </Button>
+        </div>
+      </div>
+      {showPanelIdx == 1 &&
+        <hr/>
       }
-      {showSchedulePanel &&
-      <ScheduleDuang
-        duangRequestServices={duangRequestServices}
-        refreshHistory={() => {_refreshHistory()}}
-        localMp3FileGetter={localMp3FileGetter}/>
+      {showPanelIdx == 1 &&
+        <ScheduleDuang
+          duangRequestServices={duangRequestServices}
+          refreshHistory={() => {_refreshHistory()}}
+          localMp3FileGetter={localMp3FileGetter}/>
+      }
+      {showPanelIdx == 2 &&
+        <BatchDuang
+          duangRequestServices={duangRequestServices}
+          refreshHistory={() => {_refreshHistory()}}
+          localMp3FileGetter={localMp3FileGetter}/>
       }
 
       <DuangHistory 

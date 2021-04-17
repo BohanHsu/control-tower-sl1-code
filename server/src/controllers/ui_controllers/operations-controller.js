@@ -109,6 +109,32 @@ module.exports = function() {
     });
   });
 
+  app.post('/requestDuangs', function(req, res) {
+    let convertedSchedules = [];
+
+    try {
+      if (req.body.schedules) {
+        req.body.schedules.forEach((schedule) => {
+          const year = schedule.duangYear;
+          const month = schedule.duangMonth;
+          const date = schedule.duangDate;
+          const hour = schedule.duangHour;
+          const minute = schedule.duangMinute;
+          const second = schedule.duangSecond;
+          const utcDate = timeConverter.fromNYCYMDHMSToUTCDate(year, month, date, hour, minute, second);
+          const optionalAudioFilePath = schedule.optionalAudioFilePath;
+          convertedSchedules.push([utcDate, optionalAudioFilePath]);
+        });
+      }
+    } catch (error) {
+      responder.json(req, res, {}, error);
+    }
+
+    duangRequestService.requestDuangs(convertedSchedules).then((created) => {
+      responder.json(req, res, {created}, null);
+    });
+  });
+
   app.post('/cancelDuang', function(req, res) {
     let requestId = null;
     if (req && req.body) {
