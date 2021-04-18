@@ -492,6 +492,7 @@ function BatchDuang(props) {
         </h1>
       }
       <hr/>
+      {RenderPool()}
       <h3>Start time</h3>
       <div>
         <TextField 
@@ -623,7 +624,6 @@ function BatchDuang(props) {
         }}
         />
       </div>
-      {RenderPool()}
       {RenderRollDice()}
       <hr/>
     </div>
