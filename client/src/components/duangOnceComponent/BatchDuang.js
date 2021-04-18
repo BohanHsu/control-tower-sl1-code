@@ -28,6 +28,10 @@ function BatchDuang(props) {
 
   const [playTimes, setPlayTimes] = useState(1);
 
+  const [clusters, setClusters] = useState(1);
+  const [windowLength, setWindowLength] = useState(10);
+  const [clusterDense, setClusterDense] = useState(1);
+
   const [duangs, setDuangs] = useState([]);
 
   const _onStartOrIntervalChange = (changed) => {
@@ -296,36 +300,15 @@ function BatchDuang(props) {
       allEndTime.parsedDuangEndMinute,
       allEndTime.parsedDuangEndSecond
     );
-
-    const localDuangs = [];
-    const startTimestamp = startDate.getTime();
-    const difference = endDate.getTime() - startTimestamp;
-    for (let i = 0; i < playTimes; i++) {
-      const duangTime = Math.floor(Math.random() * difference) + startTimestamp;
-
-      let choosedMp3File = null;
-      if (optionalMp3FilePool.length > 0) {
-        const mp3Idx = Math.floor(Math.random() * optionalMp3FilePool.length);
-        choosedMp3File = optionalMp3FilePool[mp3Idx];
-      }
-
-      const duangTimeDate = new Date(duangTime);
-
-      const duangInfo = {
-        timestamp: duangTime,
-        duangYear: duangTimeDate.getFullYear(),
-        duangMonth: duangTimeDate.getMonth() + 1,
-        duangDate: duangTimeDate.getDate(),
-        duangHour: duangTimeDate.getHours(),
-        duangMinute: duangTimeDate.getMinutes(),
-        duangSecond: duangTimeDate.getSeconds(),
-        optionalAudioFilePath: choosedMp3File,
-      };
-
-      localDuangs.push(duangInfo);
-    }
-
-    localDuangs.sort((a, b) => {return a.timestamp - b.timestamp;});
+    
+    const localDuangs = generateDuangs(
+      startDate.getTime(),
+      endDate.getTime(),
+      clusters,
+      windowLength,
+      clusterDense,
+      optionalMp3FilePool,
+    );
 
     setDuangs(localDuangs);
   };
@@ -345,6 +328,8 @@ function BatchDuang(props) {
       if (resp && resp.data && resp.data.created) {
         props.refreshHistory();
       }
+
+      setDuangs([]);
     })();
   };
 
@@ -396,13 +381,32 @@ function BatchDuang(props) {
         </div>
         <div>
           <TextField 
-            id="duang-times" 
-          label="Play times" 
-          value={playTimes}
+            id="clusters" 
+          label="Clusters" 
+          value={clusters}
           onChange={(evt) => {
-            setPlayTimes(evt.target.value);
+            setClusters(evt.target.value);
           }}
           />
+
+          <TextField 
+            id="window-length" 
+          label="Window Length (second)" 
+          value={windowLength}
+          onChange={(evt) => {
+            setWindowLength(evt.target.value);
+          }}
+          />
+
+          <TextField 
+            id="cluster-dense" 
+          label="Cluster Dense" 
+          value={clusterDense}
+          onChange={(evt) => {
+            setClusterDense(evt.target.value);
+          }}
+          />
+      
           <Button onClick={_handleRollTheDice}
             variant="contained"
           >
@@ -412,11 +416,18 @@ function BatchDuang(props) {
         <div>
           <ul>
             {duangs.map((duang) => {
-              return (
-                <li>
-                  {duang.duangYear}/{duang.duangMonth}/{duang.duangDate} - {duang.duangHour}:{duang.duangMinute}:{duang.duangSecond} == {(duang.optionalAudioFilePath ? duang.optionalAudioFilePath : "default")}
-                </li>
-              );
+              if (duang == null) {
+                return (
+                  <li>
+                  </li>
+                );
+              } else {
+                return (
+                  <li>
+                    {duang.duangYear}/{duang.duangMonth}/{duang.duangDate} - {duang.duangHour}:{duang.duangMinute}:{duang.duangSecond} == {(duang.optionalAudioFilePath ? duang.optionalAudioFilePath : "default")}
+                  </li>
+                );
+              }
             })}
           </ul>
         </div>
@@ -730,5 +741,60 @@ function getAllCleanedEndTime(times) {
     parsedDuangEndSecond,
   }
 }
+
+function generateDuangs(startTimestamp, endTimestamp, clusters, windowLength, clusterDense, optionalMp3FilePool) {
+  let localDuangs = [];
+
+  const clusterCenters = [];
+
+  const difference = endTimestamp - startTimestamp;
+
+  for (let i = 0; i < clusters; i++) {
+    const clusterCenter = Math.floor(Math.random() * difference) + startTimestamp;
+    clusterCenters.push(clusterCenter);
+  }
+
+  clusterCenters.sort((a, b) => {return a - b;});
+
+  clusterCenters.forEach((clusterCenter) => {
+    const begin = Math.max(startTimestamp, (clusterCenter - windowLength * 1000 / 2));
+    const end = Math.min(endTimestamp, (clusterCenter + windowLength * 1000 / 2));
+    const repeat = Math.max(1, Math.min(Math.floor(Math.random() * clusterDense * 3), clusterDense));
+    const duangs = [];
+
+    for (let i = 0; i < repeat; i++) {
+      const duangTime = Math.floor(Math.random() * (end - begin)) + begin;
+
+      let choosedMp3File = null;
+      if (optionalMp3FilePool.length > 0) {
+        const mp3Idx = Math.floor(Math.random() * optionalMp3FilePool.length);
+        choosedMp3File = optionalMp3FilePool[mp3Idx];
+      }
+
+      const duangTimeDate = new Date(duangTime);
+
+      const duangInfo = {
+        timestamp: duangTime,
+        duangYear: duangTimeDate.getFullYear(),
+        duangMonth: duangTimeDate.getMonth() + 1,
+        duangDate: duangTimeDate.getDate(),
+        duangHour: duangTimeDate.getHours(),
+        duangMinute: duangTimeDate.getMinutes(),
+        duangSecond: duangTimeDate.getSeconds(),
+        optionalAudioFilePath: choosedMp3File,
+      };
+
+      duangs.push(duangInfo);
+    }
+    duangs.sort((a, b) => {return a.timestamp - b.timestamp;});
+    duangs.push(null);
+    localDuangs = localDuangs.concat(duangs);
+  });
+
+  localDuangs.splice(localDuangs.length - 1, 1);
+
+  return localDuangs;
+}
+
 
 export default BatchDuang;
