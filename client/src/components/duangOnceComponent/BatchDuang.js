@@ -4,11 +4,12 @@ import { Button, Input, TextField } from '@material-ui/core';
 
 function BatchDuang(props) {
   const today = new Date();
+
   const [duangStartYear, setDuangStartYear] = useState(today.getFullYear() + "");
   const [duangStartMonth, setDuangStartMonth] = useState((today.getMonth() + 1) + "");
   const [duangStartDate, setDuangStartDate] = useState(today.getDate() + "");
-  const [duangStartHour, setDuangStartHour] = useState("");
-  const [duangStartMinute, setDuangStartMinute] = useState("");
+  const [duangStartHour, setDuangStartHour] = useState(today.getHours() + "");
+  const [duangStartMinute, setDuangStartMinute] = useState((today.getMinutes() + 2) + "");
   const [duangStartSecond, setDuangStartSecond] = useState("0");
 
   const [duangEndYear, setDuangEndYear] = useState(today.getFullYear() + "");
@@ -21,16 +22,16 @@ function BatchDuang(props) {
   const [warningMessage, setWarningMessage] = useState("");
 
   const [intervalHour, setIntervalHour] = useState(0);
-  const [intervalMin, setIntervalMin] = useState(1);
+  const [intervalMin, setIntervalMin] = useState(10);
   const [intervalSecond, setIntervalSecond] = useState(0);
 
   const [optionalMp3FilePool, setOptionalMp3FilePool] = useState([]);
 
   const [playTimes, setPlayTimes] = useState(1);
 
-  const [clusters, setClusters] = useState(1);
+  const [clusters, setClusters] = useState(10);
   const [windowLength, setWindowLength] = useState(10);
-  const [clusterDense, setClusterDense] = useState(1);
+  const [clusterDense, setClusterDense] = useState(3);
 
   const [duangs, setDuangs] = useState([]);
 
@@ -125,6 +126,10 @@ function BatchDuang(props) {
     setDuangEndMinute(endDate.getMinutes());
     setDuangEndSecond(endDate.getSeconds());
   };
+
+  useEffect(() => {
+    _onStartOrIntervalChange({});
+  }, []);
 
   const _onEndChange = (changed) => {
     const stateTimes = {
